@@ -1,0 +1,1424 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Превью и приёмка Spine-экспорта в браузере: проверки, профайлер, прогноз по устройствам.">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<title>Приёмка Spine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Unbounded:wght@500;600&display=swap">
+<style>.spine-player{box-sizing:border-box;width:100%;height:100%;background:none}.spine-player *{box-sizing:border-box;font-family:PT Sans,Arial,Helvetica Neue,Helvetica,Tahoma,sans-serif;color:#ddd;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.spine-player-error{font-size:14px;z-index:10;border-radius:4px;-webkit-user-select:text;-khtml-user-select:text;-moz-user-select:text;-ms-user-select:text;user-select:text}.spine-player-hidden{display:none}.spine-player canvas{border-radius:4px}.spine-player-slider{width:100%;height:16px;position:relative;cursor:pointer}.spine-player-slider-value{position:absolute;bottom:0;height:2px;background:#62b0ee99;cursor:pointer}.spine-player-slider:hover .spine-player-slider-value,.spine-player-slider-value.hovering{height:4px;background:#62b0ee;transition:height .2s}.spine-player-slider.big{height:12px;background:#000}.spine-player-slider.big .spine-player-slider-value{height:12px;background:#62b0ee}.spine-player-column{display:flex;flex-direction:column}.spine-player-row{display:flex;flex-direction:row}.spine-player-list{list-style:none!important;padding:0!important;margin:0!important}.spine-player-list li{cursor:pointer;margin:8px}.spine-player-list .selectable{display:flex;flex-direction:row;margin:0!important;padding:2px 20px 2px 0!important}.spine-player-list li.selectable:first-child{margin-top:4px!important}.spine-player-list li.selectable:last-child{margin-bottom:4px!important}.spine-player-list li.selectable:hover{background:#6e6e6e}.spine-player-list li.selectable .selectable-circle{display:flex;flex-direction:row;width:6px;min-width:6px;height:6px;border-radius:50%;background:#fff;align-self:center;opacity:0;margin:5px 10px}.spine-player-list li.selectable.selected .selectable-circle{opacity:1}.spine-player-list li.selectable .selectable-text{color:#aaa}.spine-player-list li.selectable.selected .selectable-text,.spine-player-list li.selectable:hover .selectable-text{color:#ddd}.spine-player-switch{display:flex;flex-direction:row;margin:2px 10px}.spine-player-switch-text{flex:1;margin-right:8px}.spine-player-switch-knob-area{width:30px;height:10px;display:block;border-radius:5px;background:#6e6e6e;position:relative;align-self:center;justify-self:flex-end}.spine-player-switch.active .spine-player-switch-knob-area{background:#5eaff1}.spine-player-switch-knob{display:block;width:14px;height:14px;border-radius:50%;background:#9e9e9e;position:absolute;left:0;top:-2px;filter:drop-shadow(0 0 1px #333);transition:transform .2s}.spine-player-switch.active .spine-player-switch-knob{background:#fff;transform:translate(18px);transition:transform .2s}.spine-player-popup-parent{position:relative}.spine-player-popup{user-select:none;position:absolute;background:#000000bf;z-index:1;right:2px;bottom:40px;border-radius:4px;max-height:400%;overflow:auto;font-size:85%}.spine-player-popup-title{margin:4px 15px 2px;text-align:center}.spine-player-popup hr{margin:0;border:0;border-bottom:1px solid #cccccc70}.spine-player-controls{display:flex;flex-direction:column;position:absolute;bottom:0;left:0;width:100%;opacity:1;transition:opacity .4s}.spine-player-controls-hidden{pointer-events:none;opacity:0;transition:opacity .4s}.spine-player-buttons{display:flex;flex-direction:row;width:100%;background:#00000080;border-bottom-left-radius:4px;border-bottom-right-radius:4px;padding:2px 8px 3px}.spine-player-button{background:none;outline:0;border:none;width:32px;height:32px;background-size:20px;background-repeat:no-repeat;background-position:center;cursor:pointer;margin-right:3px;padding-bottom:3px;filter:drop-shadow(0 0 1px #333)}.spine-player-button-spacer{flex:1}.spine-player-button-icon-play{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%23fff%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eplay%3C%2Ftitle%3E%3Cg%20id%3D%22play%22%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2243%2023.3%204%2047%204%201%2043%2023.3%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-play:hover{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eplay%3C%2Ftitle%3E%3Cg%20id%3D%22play%22%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2243%2023.3%204%2047%204%201%2043%2023.3%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-play-selected{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eplay%3C%2Ftitle%3E%3Cg%20id%3D%22play%22%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2243%2023.3%204%2047%204%201%2043%2023.3%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-pause{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%23fff%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Epause%3C%2Ftitle%3E%3Cg%20id%3D%22pause%22%3E%3Crect%20class%3D%22cls-1%22%20x%3D%226%22%20y%3D%221%22%20width%3D%2213%22%20height%3D%2246%22%2F%3E%3Crect%20class%3D%22cls-1%22%20x%3D%2228%22%20y%3D%221%22%20width%3D%2213%22%20height%3D%2246%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-pause:hover{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Epause%3C%2Ftitle%3E%3Cg%20id%3D%22pause%22%3E%3Crect%20class%3D%22cls-1%22%20x%3D%226%22%20y%3D%221%22%20width%3D%2213%22%20height%3D%2246%22%2F%3E%3Crect%20class%3D%22cls-1%22%20x%3D%2228%22%20y%3D%221%22%20width%3D%2213%22%20height%3D%2246%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-pause-selected{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Epause%3C%2Ftitle%3E%3Cg%20id%3D%22pause%22%3E%3Crect%20class%3D%22cls-1%22%20x%3D%226%22%20y%3D%221%22%20width%3D%2213%22%20height%3D%2246%22%2F%3E%3Crect%20class%3D%22cls-1%22%20x%3D%2228%22%20y%3D%221%22%20width%3D%2213%22%20height%3D%2246%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-speed{background-image:url(data:image/svg+xml,%3Csvg%20id%3D%22playback%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%23fff%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eplayback%3C%2Ftitle%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M48%2C28V20l-4.7-1.18a20.16%2C20.16%2C0%2C0%2C0-2-4.81l2.49-4.15L38.14%2C4.2%2C34%2C6.69a20.16%2C20.16%2C0%2C0%2C0-4.81-2L28%2C0H20L18.82%2C4.7A20.16%2C20.16%2C0%2C0%2C0%2C14%2C6.7L9.86%2C4.2%2C4.2%2C9.86%2C6.69%2C14a20.16%2C20.16%2C0%2C0%2C0-2%2C4.81L0%2C20v8l4.7%2C1.18A20.16%2C20.16%2C0%2C0%2C0%2C6.7%2C34L4.2%2C38.14%2C9.86%2C43.8%2C14%2C41.31a20.16%2C20.16%2C0%2C0%2C0%2C4.81%2C2L20%2C48h8l1.18-4.7a20.16%2C20.16%2C0%2C0%2C0%2C4.81-2l4.15%2C2.49%2C5.66-5.66L41.31%2C34a20.16%2C20.16%2C0%2C0%2C0%2C2-4.81ZM24%2C38A14%2C14%2C0%2C1%2C1%2C38%2C24%2C14%2C14%2C0%2C0%2C1%2C24%2C38Z%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2234%2024%2018%2033%2018%2015%2034%2024%2034%2024%22%2F%3E%3C%2Fsvg%3E)}.spine-player-button-icon-speed:hover{background-image:url(data:image/svg+xml,%3Csvg%20id%3D%22playback%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eplayback%3C%2Ftitle%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M48%2C28V20l-4.7-1.18a20.16%2C20.16%2C0%2C0%2C0-2-4.81l2.49-4.15L38.14%2C4.2%2C34%2C6.69a20.16%2C20.16%2C0%2C0%2C0-4.81-2L28%2C0H20L18.82%2C4.7A20.16%2C20.16%2C0%2C0%2C0%2C14%2C6.7L9.86%2C4.2%2C4.2%2C9.86%2C6.69%2C14a20.16%2C20.16%2C0%2C0%2C0-2%2C4.81L0%2C20v8l4.7%2C1.18A20.16%2C20.16%2C0%2C0%2C0%2C6.7%2C34L4.2%2C38.14%2C9.86%2C43.8%2C14%2C41.31a20.16%2C20.16%2C0%2C0%2C0%2C4.81%2C2L20%2C48h8l1.18-4.7a20.16%2C20.16%2C0%2C0%2C0%2C4.81-2l4.15%2C2.49%2C5.66-5.66L41.31%2C34a20.16%2C20.16%2C0%2C0%2C0%2C2-4.81ZM24%2C38A14%2C14%2C0%2C1%2C1%2C38%2C24%2C14%2C14%2C0%2C0%2C1%2C24%2C38Z%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2234%2024%2018%2033%2018%2015%2034%2024%2034%2024%22%2F%3E%3C%2Fsvg%3E)}.spine-player-button-icon-speed-selected{background-image:url(data:image/svg+xml,%3Csvg%20id%3D%22playback%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eplayback%3C%2Ftitle%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M48%2C28V20l-4.7-1.18a20.16%2C20.16%2C0%2C0%2C0-2-4.81l2.49-4.15L38.14%2C4.2%2C34%2C6.69a20.16%2C20.16%2C0%2C0%2C0-4.81-2L28%2C0H20L18.82%2C4.7A20.16%2C20.16%2C0%2C0%2C0%2C14%2C6.7L9.86%2C4.2%2C4.2%2C9.86%2C6.69%2C14a20.16%2C20.16%2C0%2C0%2C0-2%2C4.81L0%2C20v8l4.7%2C1.18A20.16%2C20.16%2C0%2C0%2C0%2C6.7%2C34L4.2%2C38.14%2C9.86%2C43.8%2C14%2C41.31a20.16%2C20.16%2C0%2C0%2C0%2C4.81%2C2L20%2C48h8l1.18-4.7a20.16%2C20.16%2C0%2C0%2C0%2C4.81-2l4.15%2C2.49%2C5.66-5.66L41.31%2C34a20.16%2C20.16%2C0%2C0%2C0%2C2-4.81ZM24%2C38A14%2C14%2C0%2C1%2C1%2C38%2C24%2C14%2C14%2C0%2C0%2C1%2C24%2C38Z%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2234%2024%2018%2033%2018%2015%2034%2024%2034%2024%22%2F%3E%3C%2Fsvg%3E)}.spine-player-button-icon-animations{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%23fff%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eanimations%3C%2Ftitle%3E%3Cg%20id%3D%22animations%22%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M12%2C45V43.22a6.39%2C6.39%2C0%2C0%2C0%2C.63-.81%2C27.83%2C27.83%2C0%2C0%2C1%2C3.79-4.16c.93-.84%2C2.06-1.88%2C2.86-2.71a13.83%2C13.83%2C0%2C0%2C0%2C1.53-1.9l3.9-5.24c1-1.17.95-1.1%2C2.11%2C0l3%2C2.24a4%2C4%2C0%2C0%2C0-2.29%2C2.38c-1.37%2C3-2.39%2C4-2.68%2C4.22l-.23.18c-.54.39-1.81%2C1-1.7%2C1.54l.8%2C1.49a4.5%2C4.5%2C0%2C0%2C1%2C.39%2C1l.57%2C2.15a.69.69%2C0%2C0%2C0%2C.58.48c.47.08%2C1%2C.5%2C1.33.53%2C1.29.1%2C1.79%2C0%2C1.42-.54L26.7%2C42.72a.86.86%2C0%2C0%2C1-.2-.24%2C3.64%2C3.64%2C0%2C0%2C1-.42-2.2A5.39%2C5.39%2C0%2C0%2C1%2C26.61%2C39c1.84-2%2C6.74-6.36%2C6.74-6.36%2C1.71-1.81%2C1.4-2.52.81-3.84a27.38%2C27.38%2C0%2C0%2C0-2-3c-.41-.61-2.08-2.38-2.85-3.28-.43-.5.38-2.08.87-2.82.18-.12-.41.05%2C1.72.07a23.32%2C23.32%2C0%2C0%2C0%2C3.56-.19l1.63.61c.28%2C0%2C1.18-.09%2C1.31-.35l.12-.78c.18-.39.31-1.56-.05-1.75l-.6-.52a2.28%2C2.28%2C0%2C0%2C0-1.61.07l-.2.44c-.14.15-.52.37-.71.29l-2.24%2C0c-.5.12-1.18-.42-1.81-.73L32.05%2C15a8%2C8%2C0%2C0%2C0%2C.8-3.92%2C1.22%2C1.22%2C0%2C0%2C0-.28-.82%2C7.87%2C7.87%2C0%2C0%2C0-1.15-1.06l.11-.73c-.12-.49%2C1-.82%2C1.52-.82l.76-.33c.32%2C0%2C.68-.89.78-1.21L34.94%2C4a11.26%2C11.26%2C0%2C0%2C0%2C0-1.61C34.57.08%2C30.06-1.42%2C28.78%2C2c-.14.38-.62.77.34%2C3.21a1.55%2C1.55%2C0%2C0%2C1-.3%2C1.2L28.4%2C7a4%2C4%2C0%2C0%2C1-1.19.49c-.79%2C0-1.59-.75-4%2C.54C21%2C9.16%2C18.59%2C13%2C17.7%2C14.22a3.21%2C3.21%2C0%2C0%2C0-.61%2C1.58c-.05%2C1.16.7%2C3.74.87%2C5.75.13%2C1.53.21%2C2.52.72%2C3.06%2C1.07%2C1.14%2C2.1-.18%2C2.61-1a2.74%2C2.74%2C0%2C0%2C0-.14-1.86l-.74-.1c-.15-.15-.4-.42-.39-.64-.05-3.48-.22-3.14-.18-5.39%2C1.74-1.46%2C2.4-2.45%2C2.3-2-.2%2C1.15.28%2C2.83.09%2C4.35a6.46%2C6.46%2C0%2C0%2C1-.7%2C2.58s-2.11%2C4.22-2.14%2C4.27l-1.26%2C5.6-.7%2C1.44s-.71.54-1.59%2C1.21a9.67%2C9.67%2C0%2C0%2C0-2.27%2C3.18%2C20.16%2C20.16%2C0%2C0%2C1-1.42%2C2.83l-.87%2C1.31a1.72%2C1.72%2C0%2C0%2C1-.6.61l-1.83%2C1.1a1.39%2C1.39%2C0%2C0%2C0-.16.93l.68%2C1.71a4.07%2C4.07%2C0%2C0%2C1%2C.27%2C1.07l.17%2C1.56a.75.75%2C0%2C0%2C0%2C.71.59%2C18.13%2C18.13%2C0%2C0%2C0%2C3.26-.5c.27-.09-.29-.78-.53-1s-.45-.36-.45-.36A12.78%2C12.78%2C0%2C0%2C1%2C12%2C45Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-animations:hover{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eanimations%3C%2Ftitle%3E%3Cg%20id%3D%22animations%22%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M12%2C45V43.22a6.39%2C6.39%2C0%2C0%2C0%2C.63-.81%2C27.83%2C27.83%2C0%2C0%2C1%2C3.79-4.16c.93-.84%2C2.06-1.88%2C2.86-2.71a13.83%2C13.83%2C0%2C0%2C0%2C1.53-1.9l3.9-5.24c1-1.17.95-1.1%2C2.11%2C0l3%2C2.24a4%2C4%2C0%2C0%2C0-2.29%2C2.38c-1.37%2C3-2.39%2C4-2.68%2C4.22l-.23.18c-.54.39-1.81%2C1-1.7%2C1.54l.8%2C1.49a4.5%2C4.5%2C0%2C0%2C1%2C.39%2C1l.57%2C2.15a.69.69%2C0%2C0%2C0%2C.58.48c.47.08%2C1%2C.5%2C1.33.53%2C1.29.1%2C1.79%2C0%2C1.42-.54L26.7%2C42.72a.86.86%2C0%2C0%2C1-.2-.24%2C3.64%2C3.64%2C0%2C0%2C1-.42-2.2A5.39%2C5.39%2C0%2C0%2C1%2C26.61%2C39c1.84-2%2C6.74-6.36%2C6.74-6.36%2C1.71-1.81%2C1.4-2.52.81-3.84a27.38%2C27.38%2C0%2C0%2C0-2-3c-.41-.61-2.08-2.38-2.85-3.28-.43-.5.38-2.08.87-2.82.18-.12-.41.05%2C1.72.07a23.32%2C23.32%2C0%2C0%2C0%2C3.56-.19l1.63.61c.28%2C0%2C1.18-.09%2C1.31-.35l.12-.78c.18-.39.31-1.56-.05-1.75l-.6-.52a2.28%2C2.28%2C0%2C0%2C0-1.61.07l-.2.44c-.14.15-.52.37-.71.29l-2.24%2C0c-.5.12-1.18-.42-1.81-.73L32.05%2C15a8%2C8%2C0%2C0%2C0%2C.8-3.92%2C1.22%2C1.22%2C0%2C0%2C0-.28-.82%2C7.87%2C7.87%2C0%2C0%2C0-1.15-1.06l.11-.73c-.12-.49%2C1-.82%2C1.52-.82l.76-.33c.32%2C0%2C.68-.89.78-1.21L34.94%2C4a11.26%2C11.26%2C0%2C0%2C0%2C0-1.61C34.57.08%2C30.06-1.42%2C28.78%2C2c-.14.38-.62.77.34%2C3.21a1.55%2C1.55%2C0%2C0%2C1-.3%2C1.2L28.4%2C7a4%2C4%2C0%2C0%2C1-1.19.49c-.79%2C0-1.59-.75-4%2C.54C21%2C9.16%2C18.59%2C13%2C17.7%2C14.22a3.21%2C3.21%2C0%2C0%2C0-.61%2C1.58c-.05%2C1.16.7%2C3.74.87%2C5.75.13%2C1.53.21%2C2.52.72%2C3.06%2C1.07%2C1.14%2C2.1-.18%2C2.61-1a2.74%2C2.74%2C0%2C0%2C0-.14-1.86l-.74-.1c-.15-.15-.4-.42-.39-.64-.05-3.48-.22-3.14-.18-5.39%2C1.74-1.46%2C2.4-2.45%2C2.3-2-.2%2C1.15.28%2C2.83.09%2C4.35a6.46%2C6.46%2C0%2C0%2C1-.7%2C2.58s-2.11%2C4.22-2.14%2C4.27l-1.26%2C5.6-.7%2C1.44s-.71.54-1.59%2C1.21a9.67%2C9.67%2C0%2C0%2C0-2.27%2C3.18%2C20.16%2C20.16%2C0%2C0%2C1-1.42%2C2.83l-.87%2C1.31a1.72%2C1.72%2C0%2C0%2C1-.6.61l-1.83%2C1.1a1.39%2C1.39%2C0%2C0%2C0-.16.93l.68%2C1.71a4.07%2C4.07%2C0%2C0%2C1%2C.27%2C1.07l.17%2C1.56a.75.75%2C0%2C0%2C0%2C.71.59%2C18.13%2C18.13%2C0%2C0%2C0%2C3.26-.5c.27-.09-.29-.78-.53-1s-.45-.36-.45-.36A12.78%2C12.78%2C0%2C0%2C1%2C12%2C45Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-animations-selected{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eanimations%3C%2Ftitle%3E%3Cg%20id%3D%22animations%22%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M12%2C45V43.22a6.39%2C6.39%2C0%2C0%2C0%2C.63-.81%2C27.83%2C27.83%2C0%2C0%2C1%2C3.79-4.16c.93-.84%2C2.06-1.88%2C2.86-2.71a13.83%2C13.83%2C0%2C0%2C0%2C1.53-1.9l3.9-5.24c1-1.17.95-1.1%2C2.11%2C0l3%2C2.24a4%2C4%2C0%2C0%2C0-2.29%2C2.38c-1.37%2C3-2.39%2C4-2.68%2C4.22l-.23.18c-.54.39-1.81%2C1-1.7%2C1.54l.8%2C1.49a4.5%2C4.5%2C0%2C0%2C1%2C.39%2C1l.57%2C2.15a.69.69%2C0%2C0%2C0%2C.58.48c.47.08%2C1%2C.5%2C1.33.53%2C1.29.1%2C1.79%2C0%2C1.42-.54L26.7%2C42.72a.86.86%2C0%2C0%2C1-.2-.24%2C3.64%2C3.64%2C0%2C0%2C1-.42-2.2A5.39%2C5.39%2C0%2C0%2C1%2C26.61%2C39c1.84-2%2C6.74-6.36%2C6.74-6.36%2C1.71-1.81%2C1.4-2.52.81-3.84a27.38%2C27.38%2C0%2C0%2C0-2-3c-.41-.61-2.08-2.38-2.85-3.28-.43-.5.38-2.08.87-2.82.18-.12-.41.05%2C1.72.07a23.32%2C23.32%2C0%2C0%2C0%2C3.56-.19l1.63.61c.28%2C0%2C1.18-.09%2C1.31-.35l.12-.78c.18-.39.31-1.56-.05-1.75l-.6-.52a2.28%2C2.28%2C0%2C0%2C0-1.61.07l-.2.44c-.14.15-.52.37-.71.29l-2.24%2C0c-.5.12-1.18-.42-1.81-.73L32.05%2C15a8%2C8%2C0%2C0%2C0%2C.8-3.92%2C1.22%2C1.22%2C0%2C0%2C0-.28-.82%2C7.87%2C7.87%2C0%2C0%2C0-1.15-1.06l.11-.73c-.12-.49%2C1-.82%2C1.52-.82l.76-.33c.32%2C0%2C.68-.89.78-1.21L34.94%2C4a11.26%2C11.26%2C0%2C0%2C0%2C0-1.61C34.57.08%2C30.06-1.42%2C28.78%2C2c-.14.38-.62.77.34%2C3.21a1.55%2C1.55%2C0%2C0%2C1-.3%2C1.2L28.4%2C7a4%2C4%2C0%2C0%2C1-1.19.49c-.79%2C0-1.59-.75-4%2C.54C21%2C9.16%2C18.59%2C13%2C17.7%2C14.22a3.21%2C3.21%2C0%2C0%2C0-.61%2C1.58c-.05%2C1.16.7%2C3.74.87%2C5.75.13%2C1.53.21%2C2.52.72%2C3.06%2C1.07%2C1.14%2C2.1-.18%2C2.61-1a2.74%2C2.74%2C0%2C0%2C0-.14-1.86l-.74-.1c-.15-.15-.4-.42-.39-.64-.05-3.48-.22-3.14-.18-5.39%2C1.74-1.46%2C2.4-2.45%2C2.3-2-.2%2C1.15.28%2C2.83.09%2C4.35a6.46%2C6.46%2C0%2C0%2C1-.7%2C2.58s-2.11%2C4.22-2.14%2C4.27l-1.26%2C5.6-.7%2C1.44s-.71.54-1.59%2C1.21a9.67%2C9.67%2C0%2C0%2C0-2.27%2C3.18%2C20.16%2C20.16%2C0%2C0%2C1-1.42%2C2.83l-.87%2C1.31a1.72%2C1.72%2C0%2C0%2C1-.6.61l-1.83%2C1.1a1.39%2C1.39%2C0%2C0%2C0-.16.93l.68%2C1.71a4.07%2C4.07%2C0%2C0%2C1%2C.27%2C1.07l.17%2C1.56a.75.75%2C0%2C0%2C0%2C.71.59%2C18.13%2C18.13%2C0%2C0%2C0%2C3.26-.5c.27-.09-.29-.78-.53-1s-.45-.36-.45-.36A12.78%2C12.78%2C0%2C0%2C1%2C12%2C45Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-skins{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%23fff%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eskins%3C%2Ftitle%3E%3Cg%20id%3D%22skins%22%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M36%2C12.54l-6.92%2C1-.79%2C1.2c-1%2C.25-2-.62-3-.55V12.33a1.35%2C1.35%2C0%2C0%2C1%2C.55-1.07c3-2.24%2C3.28-3.75%2C3.28-5.34A5.06%2C5.06%2C0%2C0%2C0%2C24%2C.76c-2.54%2C0-4.38.71-5.49%2C2.13a5.74%2C5.74%2C0%2C0%2C0-.9%2C4.57l2.48-.61a3.17%2C3.17%2C0%2C0%2C1%2C.45-2.4c.6-.75%2C1.75-1.13%2C3.42-1.13%2C2.56%2C0%2C2.56%2C1.24%2C2.56%2C2.56%2C0%2C.92%2C0%2C1.65-2.26%2C3.34a3.92%2C3.92%2C0%2C0%2C0-1.58%2C3.12v1.86c-1-.07-2%2C.8-3%2C.55l-.79-1.2-6.92-1c-2.25%2C0-4.35%2C2.09-5.64%2C3.93L1%2C24c3.83%2C5.11%2C10.22%2C5.11%2C10.22%2C5.11V41.93c0%2C2.34%2C2.68%2C3.88%2C5.59%2C4.86a22.59%2C22.59%2C0%2C0%2C0%2C14.37%2C0c2.91-1%2C5.59-2.52%2C5.59-4.86V29.15S43.17%2C29.15%2C47%2C24l-5.33-7.57C40.38%2C14.63%2C38.27%2C12.54%2C36%2C12.54ZM23.32%2C20.09%2C21%2C17l1.8-.6a3.79%2C3.79%2C0%2C0%2C1%2C2.4%2C0L27%2C17l-2.32%2C3.09A.85.85%2C0%2C0%2C1%2C23.32%2C20.09Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E);width:31px;height:31px}.spine-player-button-icon-skins:hover{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eskins%3C%2Ftitle%3E%3Cg%20id%3D%22skins%22%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M36%2C12.54l-6.92%2C1-.79%2C1.2c-1%2C.25-2-.62-3-.55V12.33a1.35%2C1.35%2C0%2C0%2C1%2C.55-1.07c3-2.24%2C3.28-3.75%2C3.28-5.34A5.06%2C5.06%2C0%2C0%2C0%2C24%2C.76c-2.54%2C0-4.38.71-5.49%2C2.13a5.74%2C5.74%2C0%2C0%2C0-.9%2C4.57l2.48-.61a3.17%2C3.17%2C0%2C0%2C1%2C.45-2.4c.6-.75%2C1.75-1.13%2C3.42-1.13%2C2.56%2C0%2C2.56%2C1.24%2C2.56%2C2.56%2C0%2C.92%2C0%2C1.65-2.26%2C3.34a3.92%2C3.92%2C0%2C0%2C0-1.58%2C3.12v1.86c-1-.07-2%2C.8-3%2C.55l-.79-1.2-6.92-1c-2.25%2C0-4.35%2C2.09-5.64%2C3.93L1%2C24c3.83%2C5.11%2C10.22%2C5.11%2C10.22%2C5.11V41.93c0%2C2.34%2C2.68%2C3.88%2C5.59%2C4.86a22.59%2C22.59%2C0%2C0%2C0%2C14.37%2C0c2.91-1%2C5.59-2.52%2C5.59-4.86V29.15S43.17%2C29.15%2C47%2C24l-5.33-7.57C40.38%2C14.63%2C38.27%2C12.54%2C36%2C12.54ZM23.32%2C20.09%2C21%2C17l1.8-.6a3.79%2C3.79%2C0%2C0%2C1%2C2.4%2C0L27%2C17l-2.32%2C3.09A.85.85%2C0%2C0%2C1%2C23.32%2C20.09Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-skins-selected{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eskins%3C%2Ftitle%3E%3Cg%20id%3D%22skins%22%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M36%2C12.54l-6.92%2C1-.79%2C1.2c-1%2C.25-2-.62-3-.55V12.33a1.35%2C1.35%2C0%2C0%2C1%2C.55-1.07c3-2.24%2C3.28-3.75%2C3.28-5.34A5.06%2C5.06%2C0%2C0%2C0%2C24%2C.76c-2.54%2C0-4.38.71-5.49%2C2.13a5.74%2C5.74%2C0%2C0%2C0-.9%2C4.57l2.48-.61a3.17%2C3.17%2C0%2C0%2C1%2C.45-2.4c.6-.75%2C1.75-1.13%2C3.42-1.13%2C2.56%2C0%2C2.56%2C1.24%2C2.56%2C2.56%2C0%2C.92%2C0%2C1.65-2.26%2C3.34a3.92%2C3.92%2C0%2C0%2C0-1.58%2C3.12v1.86c-1-.07-2%2C.8-3%2C.55l-.79-1.2-6.92-1c-2.25%2C0-4.35%2C2.09-5.64%2C3.93L1%2C24c3.83%2C5.11%2C10.22%2C5.11%2C10.22%2C5.11V41.93c0%2C2.34%2C2.68%2C3.88%2C5.59%2C4.86a22.59%2C22.59%2C0%2C0%2C0%2C14.37%2C0c2.91-1%2C5.59-2.52%2C5.59-4.86V29.15S43.17%2C29.15%2C47%2C24l-5.33-7.57C40.38%2C14.63%2C38.27%2C12.54%2C36%2C12.54ZM23.32%2C20.09%2C21%2C17l1.8-.6a3.79%2C3.79%2C0%2C0%2C1%2C2.4%2C0L27%2C17l-2.32%2C3.09A.85.85%2C0%2C0%2C1%2C23.32%2C20.09Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-settings{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%23fff%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Esettings%3C%2Ftitle%3E%3Cg%20id%3D%22settings%22%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M40%2C3H8A5%2C5%2C0%2C0%2C0%2C3%2C8V40a5%2C5%2C0%2C0%2C0%2C5%2C5H40a5%2C5%2C0%2C0%2C0%2C5-5V8A5%2C5%2C0%2C0%2C0%2C40%2C3ZM16%2C40H9V33h7Zm0-12H9V21h7Zm0-12H9V9h7ZM39%2C38H20V35H39Zm0-12H20V23H39Zm0-12H20V11H39Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E);margin-top:1px}.spine-player-button-icon-settings:hover{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Esettings%3C%2Ftitle%3E%3Cg%20id%3D%22settings%22%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M40%2C3H8A5%2C5%2C0%2C0%2C0%2C3%2C8V40a5%2C5%2C0%2C0%2C0%2C5%2C5H40a5%2C5%2C0%2C0%2C0%2C5-5V8A5%2C5%2C0%2C0%2C0%2C40%2C3ZM16%2C40H9V33h7Zm0-12H9V21h7Zm0-12H9V9h7ZM39%2C38H20V35H39Zm0-12H20V23H39Zm0-12H20V11H39Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-settings-selected{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Esettings%3C%2Ftitle%3E%3Cg%20id%3D%22settings%22%3E%3Cpath%20class%3D%22cls-1%22%20d%3D%22M40%2C3H8A5%2C5%2C0%2C0%2C0%2C3%2C8V40a5%2C5%2C0%2C0%2C0%2C5%2C5H40a5%2C5%2C0%2C0%2C0%2C5-5V8A5%2C5%2C0%2C0%2C0%2C40%2C3ZM16%2C40H9V33h7Zm0-12H9V21h7Zm0-12H9V9h7ZM39%2C38H20V35H39Zm0-12H20V23H39Zm0-12H20V11H39Z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-fullscreen{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%23fff%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eexpand%3C%2Ftitle%3E%3Cg%20id%3D%22settings%22%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2230.14%208%2040%208%2040%2017.86%2044.5%2017.86%2044.5%203.5%2030.14%203.5%2030.14%208%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%228%2017.86%208%208%2017.86%208%2017.86%203.5%203.5%203.5%203.5%2017.86%208%2017.86%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2240%2030.14%2040%2040%2030.14%2040%2030.14%2044.5%2044.5%2044.5%2044.5%2030.14%2040%2030.14%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2217.86%2040%208%2040%208%2030.14%203.5%2030.14%203.5%2044.5%2017.86%2044.5%2017.86%2040%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E);margin-top:1px}.spine-player-button-icon-fullscreen:hover{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eexpand%3C%2Ftitle%3E%3Cg%20id%3D%22settings%22%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2230.14%208%2040%208%2040%2017.86%2044.5%2017.86%2044.5%203.5%2030.14%203.5%2030.14%208%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%228%2017.86%208%208%2017.86%208%2017.86%203.5%203.5%203.5%203.5%2017.86%208%2017.86%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2240%2030.14%2040%2040%2030.14%2040%2030.14%2044.5%2044.5%2044.5%2044.5%2030.14%2040%2030.14%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2217.86%2040%208%2040%208%2030.14%203.5%2030.14%203.5%2044.5%2017.86%2044.5%2017.86%2040%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-fullscreen-selected{background-image:url(data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2048%2048%22%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill%3A%2362B0EE%3B%7D%3C%2Fstyle%3E%3C%2Fdefs%3E%3Ctitle%3Eexpand%3C%2Ftitle%3E%3Cg%20id%3D%22settings%22%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2230.14%208%2040%208%2040%2017.86%2044.5%2017.86%2044.5%203.5%2030.14%203.5%2030.14%208%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%228%2017.86%208%208%2017.86%208%2017.86%203.5%203.5%203.5%203.5%2017.86%208%2017.86%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2240%2030.14%2040%2040%2030.14%2040%2030.14%2044.5%2044.5%2044.5%2044.5%2030.14%2040%2030.14%22%2F%3E%3Cpolygon%20class%3D%22cls-1%22%20points%3D%2217.86%2040%208%2040%208%2030.14%203.5%2030.14%203.5%2044.5%2017.86%2044.5%2017.86%2040%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E)}.spine-player-button-icon-spine-logo{height:20px;position:relative;top:1px;margin:0 8px!important;align-self:center;border:none!important;width:auto!important;cursor:pointer;transition:transform .2s;box-shadow:none!important;filter:drop-shadow(0 0 1px #333)}.spine-player-button-icon-spine-logo:hover{transform:scale(1.05);transition:transform .2s}.spine-player-speed-slider{width:150px}.spine-player-editor-container{display:flex;flex-direction:row;height:100%;width:100%}.spine-player-editor-code{flex:1;overflow:auto}.spine-player-editor-player{flex:1;border:none;background:#000}.CodeMirror{height:100%}
+</style>
+<style>
+/* Верстак: слева сцена, транспорт, профайлер и вкладки; справа вердикт, замер устройства, замечания */
+:root {
+  --bg: #eef0f3; --panel: #ffffff; --fg: #1b1f27; --muted: #5d6573; --line: #d7dbe2;
+  --accent: #3a5bd9; --accent-fg: #ffffff; --stage: #15181e; --soft: #f5f6f8;
+  --ok: #1f8a4c; --ok-bg: #e3f4ea; --warn: #a86400; --warn-bg: #fdf0db;
+  --fail: #c22f2f; --fail-bg: #fbe4e4; --info: #44607f; --info-bg: #e6edf5;
+  --c-spine: #3a5bd9; --c-verts: #d9822b; --c-render: #8f99a8; --c-budget: #c22f2f;
+  --display: "Unbounded", "IBM Plex Sans", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r: 10px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #101318; --panel: #181c23; --fg: #e5e8ee; --muted: #98a1b0; --line: #2a303b; --soft: #1e232b;
+  --accent: #7d97ff; --accent-fg: #0e1220; --stage: #0b0d11;
+  --ok: #5fd08e; --ok-bg: #15301f; --warn: #f0b456; --warn-bg: #33270f;
+  --fail: #ff8080; --fail-bg: #3a1717; --info: #9fb9d8; --info-bg: #1b2532;
+  --c-spine: #7d97ff; --c-verts: #f0a356; --c-render: #6b7484; --c-budget: #ff8080; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #101318; --panel: #181c23; --fg: #e5e8ee; --muted: #98a1b0; --line: #2a303b; --soft: #1e232b;
+  --accent: #7d97ff; --accent-fg: #0e1220; --stage: #0b0d11;
+  --ok: #5fd08e; --ok-bg: #15301f; --warn: #f0b456; --warn-bg: #33270f;
+  --fail: #ff8080; --fail-bg: #3a1717; --info: #9fb9d8; --info-bg: #1b2532;
+  --c-spine: #7d97ff; --c-verts: #f0a356; --c-render: #6b7484; --c-budget: #ff8080; color-scheme: dark }
+
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--fg); font: 15px/1.5 var(--body); }
+.wrap { max-width: 1400px; margin: 0 auto; padding-block: 20px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 16px }
+header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; justify-content: space-between }
+h1 { font: 600 22px/1.2 var(--display); margin: 0; letter-spacing: -0.01em; text-wrap: balance }
+h1 small { display: block; font: 400 13px/1.4 var(--body); color: var(--muted); letter-spacing: 0; margin-top: 4px }
+h2 { font: 600 12px/1 var(--body); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center }
+.spread { justify-content: space-between }
+button, .btn, select, input[type=number] { font: 500 13px/1 var(--body); border-radius: 8px; border: 1px solid var(--line); background: var(--panel);
+  color: var(--fg); padding: 8px 12px; cursor: pointer }
+select, input[type=number] { padding: 6px 8px; cursor: auto }
+input[type=number] { width: 72px }
+button:hover, .btn:hover { border-color: var(--accent) }
+button:disabled { opacity: .5; cursor: default }
+button:focus-visible, .btn:focus-visible, select:focus-visible, input:focus-visible, tr:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px }
+button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent) }
+button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg) }
+button.sm { padding: 5px 9px; font-size: 12px }
+input[type=file] { display: none }
+input[type=range] { accent-color: var(--accent) }
+label.chk { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; cursor: pointer; user-select: none }
+.sets:empty { display: none }
+.lab { color: var(--muted); font-size: 13px }
+
+.grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 16px; align-items: start }
+@media (max-width: 960px) { .grid { grid-template-columns: minmax(0, 1fr) } }
+.col { display: grid; gap: 16px; min-width: 0 }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 16px; display: grid; gap: 12px; min-width: 0 }
+
+.stage { position: relative; background: var(--stage); border-radius: var(--r); overflow: hidden; height: min(60vh, 560px); min-height: 340px; touch-action: none }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block }
+.drop { position: absolute; inset: 12px; border: 1.5px dashed #ffffff40; border-radius: 8px; display: grid; place-content: center;
+  text-align: center; color: #c9d0dc; gap: 10px; padding: 16px; pointer-events: none }
+.drop b { font: 500 18px/1.3 var(--display); color: #fff }
+.drop p { margin: 0; max-width: 46ch; font-size: 14px }
+.stage.dragging .drop { border-color: #7d97ff; background: #3a5bd922; display: grid }
+.stage.loaded:not(.dragging) .drop { display: none }
+.webp { position: absolute; inset: 0; touch-action: none }
+.stage.web canvas.pixi { display: none }
+.chip { font: 500 11px/1 var(--body); padding: 3px 7px; border-radius: 999px; white-space: nowrap }
+.chip.ok { background: var(--ok-bg); color: var(--ok) } .chip.warn { background: var(--warn-bg); color: var(--warn) } .chip.over { background: var(--fail-bg); color: var(--fail) } .chip.meas { background: var(--info-bg); color: var(--info) }
+.hud { position: absolute; left: 10px; top: 10px; font: 12px/1.45 var(--mono); color: #dfe5ee; background: #0b0d11b8; padding: 6px 9px; border-radius: 6px; pointer-events: none; font-variant-numeric: tabular-nums }
+.hud:empty { display: none }
+.zoom { position: absolute; right: 10px; top: 10px; display: flex; gap: 4px }
+.zoom button { background: #0b0d11b8; color: #e5e8ee; border-color: #ffffff2a; padding: 6px 9px; font-size: 12px }
+.stage-err { position: absolute; left: 16px; bottom: 16px; right: 16px; color: #ff9a9a; font-size: 13px; margin: 0 }
+
+.seg { display: inline-flex; gap: 4px; align-items: center; flex-wrap: wrap }
+.debug { display: flex; flex-wrap: wrap; gap: 6px 14px }
+.transport { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center }
+.transport input[type=range] { width: 100% }
+.time { font: 12px var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); white-space: nowrap }
+
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--line); padding-bottom: 8px }
+.tabs button { border: 0; background: transparent; padding: 6px 10px; color: var(--muted) }
+.tabs button[aria-selected="true"] { color: var(--fg); background: var(--soft); box-shadow: inset 0 -2px 0 var(--accent) }
+.tbl { overflow-x: auto; max-height: 460px; overflow-y: auto }
+table { border-collapse: collapse; width: 100%; font-size: 13px; font-variant-numeric: tabular-nums }
+th { text-align: left; font-weight: 500; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; position: sticky; top: 0; background: var(--panel) }
+td { padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; vertical-align: middle }
+td.name { font-family: var(--mono) }
+td.num, th.num { text-align: right }
+tbody.click tr { cursor: pointer }
+tbody.click tr:hover td { background: color-mix(in srgb, var(--accent) 8%, transparent) }
+tr.on td { background: color-mix(in srgb, var(--accent) 16%, transparent) }
+tr.brk td { border-top: 2px solid var(--warn) }
+canvas.heat { width: 160px; height: 16px; display: block; border-radius: 3px; cursor: crosshair }
+.tag { font: 500 11px/1 var(--body); padding: 3px 6px; border-radius: 4px; background: var(--warn-bg); color: var(--warn); white-space: nowrap }
+.tag.i { background: var(--info-bg); color: var(--info) }
+.tag.f { background: var(--fail-bg); color: var(--fail) }
+.sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px }
+
+.prof { display: grid; gap: 8px }
+.prof canvas { width: 100%; height: 120px; display: block; background: var(--soft); border-radius: 6px; cursor: crosshair }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--muted) }
+.kv { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px }
+.kv div { background: var(--soft); border-radius: 6px; padding: 8px 10px; min-width: 0 }
+.kv b { display: block; font: 500 16px/1.2 var(--mono); font-variant-numeric: tabular-nums }
+.kv span { font-size: 12px; color: var(--muted) }
+
+.verdict { border-radius: 8px; padding: 14px 16px; display: grid; gap: 4px }
+.verdict b { font: 600 18px/1.25 var(--display) }
+.verdict span { font-size: 13px }
+.verdict.ok { background: var(--ok-bg); color: var(--ok) }
+.verdict.warn { background: var(--warn-bg); color: var(--warn) }
+.verdict.fail { background: var(--fail-bg); color: var(--fail) }
+.verdict.idle { background: var(--info-bg); color: var(--info) }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px }
+.checks li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line) }
+.checks li:last-child { border-bottom: 0 }
+.dot { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font: 600 11px/1 var(--mono); margin-top: 2px }
+.ok .dot { background: var(--ok-bg); color: var(--ok) } .warn .dot { background: var(--warn-bg); color: var(--warn) }
+.fail .dot { background: var(--fail-bg); color: var(--fail) } .info .dot { background: var(--info-bg); color: var(--info) }
+.checks strong { font-weight: 600; font-size: 14px }
+.checks p { margin: 2px 0 0; color: var(--muted); font-size: 13px; overflow-wrap: anywhere }
+code { font-family: var(--mono); font-size: 0.92em }
+dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 4px 14px; margin: 0; font-size: 13px; font-variant-numeric: tabular-nums }
+dt { color: var(--muted) } dd { margin: 0; overflow-wrap: anywhere }
+textarea { width: 100%; min-height: 110px; font: 12px/1.5 var(--mono); color: var(--fg); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 8px; padding: 10px; resize: vertical }
+.err { color: var(--fail); font-size: 13px; margin: 0 }
+.hint { color: var(--muted); font-size: 13px; margin: 0 }
+.lib { display: flex; flex-wrap: wrap; gap: 6px }
+.lib:empty::before { content: "Пусто. Загруженные наборы сохраняются здесь, в этом браузере."; color: var(--muted); font-size: 13px }
+.lib .item { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden }
+.lib .item button { border: 0; border-radius: 0 }
+.lib .item button + button { border-left: 1px solid var(--line); color: var(--muted) }
+.evlog { font: 12px/1.6 var(--mono); max-height: 300px; overflow: auto; background: var(--soft); border-radius: 6px; padding: 8px 10px; font-variant-numeric: tabular-nums }
+.evlog:empty::before { content: "Событий пока не было. Включите анимацию, в которой есть события."; color: var(--muted); font-family: var(--body) }
+.cmp td:first-child { color: var(--muted) }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important } }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Приёмка Spine<small>Два рантайма на выбор: PixiJS 8.18.1 + spine-pixi-v8 и spine-webgl Web Player (основа spine-threejs), оба 4.2.119. Файлы не покидают браузер.</small></h1>
+    <div class="row">
+      <label class="btn" for="pick-files">Открыть файлы или zip</label>
+      <input id="pick-files" type="file" multiple accept=".zip,.skel,.json,.atlas,.txt,.png,.webp,.avif">
+      <label class="btn" for="pick-dir">Открыть папку</label>
+      <input id="pick-dir" type="file" webkitdirectory multiple>
+    </div>
+  </header>
+  <details class="panel" id="lib-panel">
+    <summary><h2 style="display:inline">Библиотека</h2></summary>
+    <div class="lib" id="lib"></div>
+  </details>
+  <div class="row sets" id="sets"></div>
+
+  <div class="grid">
+    <div class="col">
+      <div class="stage" id="stage">
+        <div class="drop" id="drop">
+          <b>Перетащите сюда экспорт</b>
+          <p>Zip от дизайнера, папку или файлы <code>.skel</code>/<code>.json</code> + <code>.atlas</code> + текстуры. Несколько наборов разрешений (1.0, 2.0) сравниваются между собой.</p>
+        </div>
+        <div class="webp" id="webp" hidden></div>
+        <div class="hud" id="hud"></div>
+        <div class="zoom">
+          <button id="z-out" aria-label="Отдалить">−</button>
+          <button id="z-in" aria-label="Приблизить">+</button>
+          <button id="z-1">1:1</button>
+          <button id="z-fit">Вписать</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="row spread">
+          <div class="seg" id="rt-seg" role="group" aria-label="Рантайм"><span class="lab">Рантайм</span>
+            <button class="sm" data-rt="pixi" aria-pressed="true">Pixi v8 (spine-pixi-v8)</button>
+            <button class="sm" data-rt="web" aria-pressed="false">WebGL (spine-webgl, spine-threejs)</button>
+          </div>
+          <span class="hint" id="rt-hint">Профайлер, замер, копии и отладочные слои работают в обоих рантаймах.</span>
+        </div>
+        <div class="transport">
+          <button id="play" class="primary" style="min-width:76px">Пауза</button>
+          <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Время анимации">
+          <span class="time" id="time">0.00 / 0.00 с</span>
+        </div>
+        <div class="row spread">
+          <div class="row">
+            <button id="step-back" class="sm" title="Кадр назад">‹ кадр</button>
+            <button id="step-fwd" class="sm" title="Кадр вперёд">кадр ›</button>
+            <button id="to-setup" class="sm">В setup pose</button>
+            <span class="lab">Скорость</span>
+            <select id="speed"><option value="0.1">×0.1</option><option value="0.25">×0.25</option><option value="0.5">×0.5</option><option value="1" selected>×1</option><option value="2">×2</option></select>
+            <span class="lab">Скин</span><select id="skin"></select>
+          </div>
+          <div class="row">
+            <span class="lab">Копий</span><input id="inst" type="number" min="1" max="200" value="1" aria-label="Число копий на сцене">
+            <span class="lab">Фон</span>
+            <div class="seg" id="bg-seg">
+              <button class="sm" data-bg="15181e" aria-pressed="true">Тёмный</button>
+              <button class="sm" data-bg="5b6475">Средний</button>
+              <button class="sm" data-bg="f2f3f5">Светлый</button>
+            </div>
+          </div>
+        </div>
+        <div class="debug" id="debug">
+          <label class="chk"><input type="checkbox" id="d-bones">Кости</label>
+          <label class="chk"><input type="checkbox" id="d-regions">Регионы</label>
+          <label class="chk"><input type="checkbox" id="d-hull">Меши</label>
+          <label class="chk"><input type="checkbox" id="d-tris">Треугольники</label>
+          <label class="chk"><input type="checkbox" id="d-weights">Веса</label>
+          <label class="chk"><input type="checkbox" id="d-clip">Клиппинг</label>
+          <label class="chk"><input type="checkbox" id="d-bbox">Bounding box</label>
+          <label class="chk"><input type="checkbox" id="d-paths">Пути</label>
+          <label class="chk"><input type="checkbox" id="d-bounds">Габариты</label>
+          <label class="chk"><input type="checkbox" id="d-setup">Габариты позы</label>
+          <label class="chk"><input type="checkbox" id="d-flip">Альфа наоборот</label>
+        </div>
+        <p class="hint">«Альфа наоборот» грузит текстуры с противоположным флагом premultiplied alpha: так выглядит ошибка экспорта, тёмные ореолы или пересвеченный additive. Отладочные слои добавляют свои draw calls в замер.</p>
+      </div>
+
+      <div class="panel prof">
+        <div class="row spread"><h2>Профайлер кадров</h2>
+          <div class="row"><button id="worst" class="sm">К худшему кадру</button><button id="rec-clear" class="sm">Очистить</button></div></div>
+        <canvas id="prof" aria-label="График времени кадров"></canvas>
+        <div class="legend">
+          <span><i class="sw" style="background:var(--c-spine)"></i>Spine: состояние и кости</span>
+          <span><i class="sw" style="background:var(--c-verts)"></i>Spine: вершины и клиппинг</span>
+          <span><i class="sw" style="background:var(--c-render)"></i>Рендер: сборка и отправка в GPU</span>
+          <span><i class="sw" style="background:var(--c-budget)"></i>16.7 мс, бюджет 60 FPS</span>
+        </div>
+        <div class="kv" id="frame-kv"></div>
+        <p class="hint" id="frame-hint">Время CPU на этом устройстве. GPU браузер не измеряет: его нагрузку показывают draw calls, вершины и площадь отрисовки.</p>
+      </div>
+
+      <div class="panel">
+        <div class="tabs" role="tablist" id="tabs">
+          <button role="tab" aria-selected="true" data-tab="t-anims" id="tab-anims">Анимации</button>
+          <button role="tab" aria-selected="false" data-tab="t-tracks" id="tab-tracks">Треки</button>
+          <button role="tab" aria-selected="false" data-tab="t-order" id="tab-order">Порядок отрисовки</button>
+          <button role="tab" aria-selected="false" data-tab="t-meshes" id="tab-meshes">Меши</button>
+          <button role="tab" aria-selected="false" data-tab="t-events" id="tab-events">События</button>
+        </div>
+        <section id="t-anims" class="tabp">
+          <div class="row spread" style="margin-bottom:8px"><p class="hint">Клик по строке включает анимацию, клик по тепловой полосе переходит в этот момент. Полоса показывает CPU на кадр.</p>
+            <button id="bench" class="sm primary">Замерить все анимации</button></div>
+          <div class="tbl"><table>
+            <thead><tr><th>Имя</th><th class="num">Длина, с</th><th>CPU по времени</th><th class="num">Draw calls</th><th class="num">Вершины</th><th class="num">Перерисовка</th><th class="num">Замер, мс</th><th></th></tr></thead>
+            <tbody id="anims" class="click"><tr><td colspan="8" class="hint">Появятся после загрузки экспорта.</td></tr></tbody>
+          </table></div>
+        </section>
+        <section id="t-tracks" class="tabp" hidden>
+          <p class="hint">Треки играют одновременно и накладываются снизу вверх, как в игре. Микс задаёт плавный переход при смене анимации на треке.</p>
+          <div class="tbl"><table><thead><tr><th>Трек</th><th>Анимация</th><th>Цикл</th><th>Вес</th><th></th></tr></thead><tbody id="tracks"></tbody></table></div>
+          <div class="row"><button id="add-track" class="sm">Добавить трек</button><span class="lab">Микс, с</span><input id="mix" type="number" min="0" max="2" step="0.05" value="0.2" aria-label="Длительность микса"></div>
+        </section>
+        <section id="t-order" class="tabp" hidden>
+          <p class="hint" id="order-sum">Текущий кадр: видимые слоты в порядке отрисовки. Оранжевая черта отмечает начало нового draw call: Pixi склеивает соседние слоты с одним режимом смешивания, пока хватает слотов под текстуры.</p>
+          <div class="tbl"><table><thead><tr><th>#</th><th>Слот</th><th>Вложение</th><th>Блендинг</th><th>Текстура</th><th class="num">Вершины</th><th>Причина</th></tr></thead><tbody id="order"></tbody></table></div>
+        </section>
+        <section id="t-meshes" class="tabp" hidden>
+          <div class="tbl"><table><thead><tr><th>Меш</th><th>Скин</th><th class="num">Вершины</th><th class="num">Треугольники</th><th class="num">Костей влияет</th><th>Деформация</th></tr></thead><tbody id="meshes"></tbody></table></div>
+        </section>
+        <section id="t-events" class="tabp" hidden>
+          <div class="row spread"><p class="hint">События первой копии: время трека, имя, параметры.</p><button id="ev-clear" class="sm">Очистить</button></div>
+          <div class="evlog" id="evlog"></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="panel">
+        <div class="verdict idle" id="verdict"><b>Ждём экспорт</b><span>Проверки запустятся сами после загрузки.</span></div>
+        <ul class="checks" id="checks">
+          <li class="info"><div class="dot">i</div><div><strong>Версия экспорта</strong><p>Major.minor совпадает с рантаймом 4.2 (spine-pixi-v8, spine-webgl, spine-threejs 4.2.x). Иначе ломается вплоть до зависания без ошибок.</p></div></li>
+          <li class="info"><div class="dot">i</div><div><strong>Premultiplied alpha</strong><p>Флаг <code>pma</code> в атласе совпадает с тем, как ассет нарисован.</p></div></li>
+          <li class="info"><div class="dot">i</div><div><strong>Атлас</strong><p>Страницы до 2048 px, все регионы на месте, нет лишних. Объём в видеопамяти.</p></div></li>
+          <li class="info"><div class="dot">i</div><div><strong>Поза и габариты</strong><p>Пустая setup pose ломает раскладку по габаритам позы.</p></div></li>
+          <li class="info"><div class="dot">i</div><div><strong>Нагрузка</strong><p>Draw calls, вершины, клиппинг и перерисовка в каждом кадре каждой анимации, CPU на этом устройстве.</p></div></li>
+          <li class="info"><div class="dot">i</div><div><strong>Наборы разрешений</strong><p>Скелет у всех наборов один, регионы совпадают.</p></div></li>
+        </ul>
+      </div>
+      <div class="panel">
+        <div class="row spread"><h2>Это устройство</h2><span class="lab" id="dev-name"></span></div>
+        <div class="kv" id="dev-kv"></div>
+        <p class="hint">Цифры для другого устройства честнее всего снять на нём самом: откройте эту страницу на телефоне, загрузите тот же экспорт, нажмите «Замерить все анимации» и вставьте замер сюда.</p>
+        <div class="row"><button id="copy-run" class="sm" disabled>Скопировать замер</button><span class="hint" id="copy-run-msg" aria-live="polite"></span></div>
+        <textarea id="paste-run" aria-label="Замер с другого устройства" placeholder="Вставьте сюда замер с другого устройства"></textarea>
+        <div class="tbl" id="cmp-wrap" hidden><table class="cmp"><thead id="cmp-head"></thead><tbody id="cmp-body"></tbody></table></div>
+      </div>
+      <div class="panel">
+        <div class="row spread"><h2>Прогноз по устройствам</h2><span class="lab" id="pred-src"></span></div>
+        <div class="row"><span class="lab">Размер на экране, % от скелета</span><input id="scr" type="number" min="10" max="400" step="10" value="100" aria-label="Размер на экране в процентах"></div>
+        <div class="tbl"><table><thead><tr><th>Устройство</th><th class="num">CPU ср., мс</th><th class="num">GPU, мс</th><th>Доля кадра</th></tr></thead><tbody id="pred"></tbody></table></div>
+        <p class="hint">CPU: замер на этом устройстве, пересчитанный по скорости процессора. Скорость этого устройства оценивает встроенный тест, опорные телефоны взяты по публичным результатам Geekbench 6 single-core, точность около ±25%. GPU: площадь заливки на паспортную скорость заливки GPU с коэффициентом 0.5 на смешивание, это грубая оценка. Доля кадра: большее из CPU и GPU от 16.7 мс; «запас» до 15%, «впритык» до 40%. Замер, снятый на реальном устройстве и вставленный выше, точнее прогноза и показан отдельной строкой.</p>
+      </div>
+      <div class="panel">
+        <h2>Набор</h2>
+        <dl id="facts"><dt>Файлы</dt><dd>не загружены</dd></dl>
+      </div>
+      <div class="panel">
+        <h2>Замечания для дизайнера</h2>
+        <textarea id="remarks" aria-label="Текст замечаний" readonly>Здесь соберётся текст замечаний, его можно скопировать в задачу или чат.</textarea>
+        <div class="row"><button id="copy" class="primary">Скопировать</button><span class="hint" id="copied" aria-live="polite"></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://unpkg.com/@esotericsoftware/spine-player@4.2.119/dist/iife/spine-player.min.js"></script>
+<script>window.SPW = window.spine</script>
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@8.18.1/dist/pixi.min.js"></script>
+<script src="https://unpkg.com/@esotericsoftware/spine-pixi-v8@4.2.119/dist/iife/spine-pixi-v8.min.js"></script>
+<script></script>
+<script>
+"use strict";
+const RUNTIME = "4.2";
+const RUNTIME_NOTE = "spine-pixi-v8, spine-webgl и spine-threejs 4.2.x";
+const BUDGET_MS = 1000 / 60;
+const RING = 600;
+const S = window.spine;
+const $ = (id) => document.getElementById(id);
+const st = {
+  sets: [], cur: null, app: null, gl: null, world: null, insts: [], overlay: null, debugR: null,
+  bg: "15181e", flip: false, speed: 1, playing: true, tracks: [{ anim: null, loop: true, alpha: 1 }], mix: 0.2,
+  mode: "pixi", web: null, ring: [], sel: -1, draws: 0, glCalls: 0, cam: { z: 1, x: 0, y: 0 }, fitted: false, run: null, benchBusy: false, longTasks: 0,
+};
+
+// ---------- чтение входа ----------
+const extOf = (n) => n.toLowerCase().split(".").pop();
+const dirOf = (p) => p.includes("/") ? p.slice(0, p.lastIndexOf("/")) : "";
+const baseOf = (p) => p.split("/").pop();
+async function filesFromList(list) {
+  const out = [];
+  for (const f of list) {
+    const path = f.webkitRelativePath || f.relPath || f.name;
+    if (path.includes("__MACOSX") || baseOf(path).startsWith("._")) continue;
+    if (extOf(f.name) === "zip") out.push(...await filesFromZip(f, path.replace(/\.zip$/i, "")));
+    else out.push({ path, bytes: new Uint8Array(await f.arrayBuffer()) });
+  }
+  return out;
+}
+async function filesFromZip(blob, prefix) {
+  const zip = await JSZip.loadAsync(blob), out = [];
+  for (const e of Object.values(zip.files)) {
+    if (e.dir || e.name.includes("__MACOSX") || baseOf(e.name).startsWith("._")) continue;
+    const p = prefix + "/" + e.name;
+    if (extOf(e.name) === "zip") out.push(...await filesFromZip(await e.async("blob"), p.replace(/\.zip$/i, "")));
+    else out.push({ path: p, bytes: await e.async("uint8array") });
+  }
+  return out;
+}
+async function walkEntry(entry, prefix, acc) {
+  if (entry.isFile) {
+    const f = await new Promise((res, rej) => entry.file(res, rej));
+    f.relPath = prefix + entry.name; acc.push(f);
+  } else if (entry.isDirectory) {
+    const reader = entry.createReader();
+    let batch;
+    do {
+      batch = await new Promise((res, rej) => reader.readEntries(res, rej));
+      for (const e of batch) await walkEntry(e, prefix + entry.name + "/", acc);
+    } while (batch.length);
+  }
+}
+
+// ---------- сборка наборов ----------
+const dec = new TextDecoder();
+const isSkeletonJson = (f) => extOf(f.path) === "json" && dec.decode(f.bytes.subarray(0, 400)).includes('"skeleton"');
+function parseAtlasPages(text) {
+  const lines = text.split(/\r?\n/), pages = [];
+  let scale = null;
+  for (let i = 0; i < lines.length; i++) {
+    const l = lines[i].trim();
+    if (l && !l.includes(":") && i + 1 < lines.length && /^\s*size\s*:/.test(lines[i + 1])) pages.push(l);
+    const m = /^scale\s*:\s*([\d.]+)/.exec(l); if (m) scale = +m[1];
+  }
+  return { pages, scale };
+}
+function buildSets(files) {
+  const sets = [], problems = [];
+  for (const sk of files.filter((f) => extOf(f.path) === "skel" || isSkeletonJson(f))) {
+    const dir = dirOf(sk.path), stem = baseOf(sk.path).replace(/\.[^.]+$/, "");
+    const atlases = files.filter((f) => dirOf(f.path) === dir && /\.atlas(\.txt)?$/i.test(f.path));
+    const atlas = atlases.find((a) => baseOf(a.path).startsWith(stem + ".")) || atlases[0];
+    if (!atlas) { problems.push(`${sk.path}: рядом нет .atlas`); continue; }
+    const atlasText = dec.decode(atlas.bytes);
+    const { pages, scale } = parseAtlasPages(atlasText);
+    const images = {}, missing = [];
+    for (const p of pages) {
+      const img = files.find((f) => dirOf(f.path) === dir && baseOf(f.path) === p);
+      img ? images[p] = img : missing.push(p);
+    }
+    sets.push({ name: dir.split("/").slice(-2).join("/") || stem, dir, stem, skel: sk, atlas, atlasText, pages, scale, images, missing, binary: extOf(sk.path) === "skel" });
+  }
+  const seen = {}; for (const s of sets) seen[s.name] = (seen[s.name] || 0) + 1;
+  sets.forEach((s) => { if (seen[s.name] > 1) s.name = s.dir || s.stem });
+  return { sets, problems };
+}
+async function sha(bytes) {
+  const d = await crypto.subtle.digest("SHA-1", bytes);
+  return [...new Uint8Array(d)].map((x) => x.toString(16).padStart(2, "0")).join("");
+}
+function readHeaderVersion(set) {
+  if (!set.binary) { try { return JSON.parse(dec.decode(set.skel.bytes)).skeleton.spine || "?" } catch { return "?" } }
+  const b = set.skel.bytes; let i = 8, len = 0, shift = 0, x;
+  do { x = b[i++]; len |= (x & 0x7f) << shift; shift += 7 } while (x & 0x80);
+  return len > 1 ? dec.decode(b.subarray(i, i + len - 1)) : "?";
+}
+function readSkeleton(set, atlas, hook) {
+  const loader = new S.AtlasAttachmentLoader(atlas);
+  if (hook) { const find = atlas.findRegion.bind(atlas); atlas.findRegion = (n) => { const r = find(n); hook(n, r); return r } }
+  return set.binary ? new S.SkeletonBinary(loader).readSkeletonData(set.skel.bytes) : new S.SkeletonJson(loader).readSkeletonData(dec.decode(set.skel.bytes));
+}
+
+// ---------- работа кадра: то, что не зависит от устройства ----------
+const BLEND = ["Normal", "Additive", "Multiply", "Screen"];
+const QUAD = [0, 1, 2, 2, 3, 0];
+const clipperP = new S.SkeletonClipping();
+let clipperW = null;
+let vbuf = new Float32Array(4096);
+const triArea = (v, t) => { let a = 0; for (let i = 0; i < t.length; i += 3) { const p = t[i] * 2, q = t[i + 1] * 2, r = t[i + 2] * 2; a += Math.abs((v[q] - v[p]) * (v[r + 1] - v[p + 1]) - (v[r] - v[p]) * (v[q + 1] - v[p + 1])) / 2 } return a };
+function frameWork(sk, withOrder, maxTex, ns = S) {
+  const clipper = ns === S ? clipperP : (clipperW || (clipperW = new ns.SkeletonClipping()));
+  let slots = 0, verts = 0, tris = 0, clipped = 0, area = 0, addArea = 0, draws = 0, prevBlend = -1, texSet = new Set();
+  const order = withOrder ? [] : null;
+  for (const slot of sk.drawOrder) {
+    const att = slot.getAttachment();
+    if (!slot.bone.active || !att) { clipper.clipEndWithSlot(slot); continue }
+    if (att instanceof ns.ClippingAttachment) { clipper.clipStart(slot, att); continue }
+    const isMesh = att instanceof ns.MeshAttachment, isRegion = att instanceof ns.RegionAttachment;
+    if (!isMesh && !isRegion) { clipper.clipEndWithSlot(slot); continue }
+    const alpha = sk.color.a * slot.color.a * att.color.a;
+    if (alpha <= 0) { clipper.clipEndWithSlot(slot); continue }
+    const n = isMesh ? att.worldVerticesLength : 8;
+    if (vbuf.length < n) vbuf = new Float32Array(n * 2);
+    if (isMesh) att.computeWorldVertices(slot, 0, n, vbuf, 0, 2); else att.computeWorldVertices(slot, vbuf, 0, 2);
+    const tri = isMesh ? att.triangles : QUAD;
+    let v = n / 2, t = tri.length / 3, wasClipped = false, a;
+    if (clipper.isClipping()) {
+      clipper.clipTriangles(vbuf, tri, tri.length);
+      v = clipper.clippedVertices.length / 2; t = clipper.clippedTriangles.length / 3; wasClipped = true; clipped++;
+      a = triArea(clipper.clippedVertices, clipper.clippedTriangles);
+    } else a = triArea(vbuf, tri);
+    if (t > 0) {
+      slots++; verts += v; tris += t; area += a;
+      const blend = slot.data.blendMode, page = att.region && att.region.page ? att.region.page.name : "?";
+      if (blend === 1) addArea += a;
+      let reason = null;
+      if (prevBlend === -1) reason = "первый";
+      else if (blend !== prevBlend) reason = `блендинг ${BLEND[prevBlend]} → ${BLEND[blend]}`;
+      else if (!texSet.has(page) && texSet.size >= maxTex) reason = maxTex === 1 ? "смена текстуры" : "кончились слоты текстур";
+      if (reason) { draws++; texSet = new Set() }
+      texSet.add(page); prevBlend = blend;
+      if (order) order.push({ slot: slot.data.name, att: att.name, blend: BLEND[blend], page, v, clip: wasClipped, reason });
+    }
+    clipper.clipEndWithSlot(slot);
+  }
+  clipper.clipEnd();
+  return { slots, verts, tris, clipped, area, addArea, draws, order };
+}
+
+// ---------- разбор рантаймом ----------
+function analyse(set) {
+  const res = { version: readHeaderVersion(set) };
+  if (res.version.split(".").slice(0, 2).join(".") !== RUNTIME) { res.data = null; return res }
+  const atlas = new S.TextureAtlas(set.atlasText);
+  for (const p of atlas.pages) p.setTexture({ setFilters() {}, setWraps() {}, dispose() {} });
+  const used = new Set(), missingRegions = new Set();
+  const data = readSkeleton(set, atlas, (n, r) => r ? used.add(n) : missingRegions.add(n));
+  Object.assign(res, { data, atlas, pma: atlas.pages.some((p) => p.pma),
+    unused: atlas.regions.map((r) => r.name).filter((n) => !used.has(n)), missingRegions: [...missingRegions],
+    additive: data.slots.filter((s) => s.blendMode === 1).length, otherBlend: data.slots.filter((s) => s.blendMode >= 2).length });
+  const sk = new S.Skeleton(data);
+  sk.setToSetupPose(); sk.updateWorldTransform(S.Physics.update);
+  const sb = sk.getBoundsRect();
+  res.setupEmpty = !(sb.width > 0);
+  res.setupBounds = res.setupEmpty ? null : sb;
+  const state = new S.AnimationState(new S.AnimationStateData(data));
+  res.anims = data.animations.map((a) => {
+    sk.setToSetupPose(); state.clearTracks(); state.setAnimation(0, a.name, true);
+    const samples = [];
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity, error = null, events = new Set();
+    for (const tl of a.timelines) if (tl.events) for (const e of tl.events) events.add(e.data.name);
+    try {
+      const step = 1 / 30, n = Math.max(1, Math.round(a.duration / step) + 1);
+      for (let i = 0; i < n; i++) {
+        const t0 = performance.now();
+        let w;
+        for (let rep = 0; rep < 4; rep++) { state.apply(sk); sk.updateWorldTransform(S.Physics.update); w = frameWork(sk, false, 16) }
+        const ms = (performance.now() - t0) / 4;
+        const b = sk.getBoundsRect();
+        if (b.width > 0) { x0 = Math.min(x0, b.x); y0 = Math.min(y0, b.y); x1 = Math.max(x1, b.x + b.width); y1 = Math.max(y1, b.y + b.height) }
+        samples.push({ t: i * step, ms, ...w, bw: b.width > 0 ? b.width * b.height : 0 });
+        state.update(step);
+      }
+    } catch (e) { error = e.message }
+    const max = (k) => samples.reduce((m, s) => Math.max(m, s[k]), 0);
+    const bArea = x1 > x0 ? (x1 - x0) * (y1 - y0) : 0;
+    const od = samples.reduce((m, s) => Math.max(m, s.bw ? s.area / s.bw : 0), 0);
+    return { name: a.name, duration: a.duration, samples, error, events: [...events],
+      x: x0, y: y0, w: x1 > x0 ? Math.round(x1 - x0) : 0, h: y1 > y0 ? Math.round(y1 - y0) : 0, bArea,
+      maxSlots: max("slots"), maxDraws: max("draws"), maxVerts: max("verts"), maxClipped: max("clipped"), maxMs: max("ms"), overdraw: od,
+      clip: samples.some((s) => s.clipped > 0) };
+  });
+  res.meshes = [];
+  for (const skin of data.skins) for (const e of skin.getAttachments()) {
+    const a = e.attachment;
+    if (!(a instanceof S.MeshAttachment)) continue;
+    const inf = new Set();
+    if (a.bones) for (let i = 0; i < a.bones.length;) { const c = a.bones[i++]; for (let j = 0; j < c; j++) inf.add(a.bones[i++]) }
+    const deform = data.animations.some((an) => an.timelines.some((t) => t.attachment === a));
+    res.meshes.push({ name: a.name, skin: skin.name, verts: a.worldVerticesLength / 2, tris: a.triangles.length / 3, bones: inf.size, weighted: !!a.bones, deform });
+  }
+  res.meshes.sort((p, q) => q.verts - p.verts);
+  return res;
+}
+
+// ---------- проверки ----------
+const plural = (n, a, b, c) => { const m = n % 10, h = n % 100; return m === 1 && h !== 11 ? a : m >= 2 && m <= 4 && (h < 12 || h > 14) ? b : c };
+function checksFor(set, all) {
+  const r = set.res, c = [];
+  const add = (level, title, detail, remark) => c.push({ level, title, detail, remark });
+  const mm = r.version.split(".").slice(0, 2).join(".");
+  if (mm === RUNTIME) add("ok", `Версия экспорта ${r.version}`, `Совпадает с рантаймом ${RUNTIME}: ${RUNTIME_NOTE}.`);
+  else add("fail", `Версия экспорта ${r.version}`, `Рантайм у нас ${RUNTIME}. Экспорт другой версии не загрузится или сломается молча.`, `Переэкспортировать из Spine ${RUNTIME}.x (сейчас ${r.version}).`);
+  if (set.missing.length) add("fail", "Не хватает текстур", set.missing.join(", "), `В архиве нет текстур атласа: ${set.missing.join(", ")}.`);
+  if (!r.data) return c;
+  add(set.binary ? "ok" : "warn", set.binary ? "Бинарный .skel" : "Экспорт в JSON", set.binary ? "Формат, который грузит прод." : "В прод идёт binary: он меньше и быстрее парсится.", set.binary ? null : "Экспортировать в binary (.skel) вместо JSON.");
+  add("info", `Альфа ${r.pma ? "premultiplied" : "обычная"} (${r.pma ? "pma:true" : "pma:false"})`,
+    `Рантайм берёт флаг из атласа сам. Additive-слотов ${r.additive}. Сверьте глазами с «Альфа наоборот»: ореолов и тёмных краёв в обычном режиме быть не должно.` + (r.otherBlend ? ` Multiply/Screen-слотов ${r.otherBlend}: им нужен premultiplied.` : ""));
+  if (r.otherBlend && !r.pma) add("warn", "Multiply/Screen без premultiplied", "Эти режимы корректно работают только с premultiplied alpha.", "Включить Premultiply alpha в упаковщике текстур: в скелете есть Multiply/Screen.");
+  const pages = r.atlas.pages, big = pages.filter((p) => p.width > 2048 || p.height > 2048);
+  const vram = pages.reduce((s, p) => s + p.width * p.height * 4, 0) / 1048576;
+  const dims = pages.map((p) => `${p.width}×${p.height}`).join(", ");
+  if (big.length) add(big.some((p) => p.width > 4096 || p.height > 4096) ? "fail" : "warn", "Страница атласа больше 2048 px", dims, `Ограничить страницы атласа 2048×2048 (сейчас ${dims}).`);
+  else add("ok", `Атлас: ${pages.length} ${plural(pages.length, "страница", "страницы", "страниц")}, ${dims}`, `${r.atlas.regions.length} регионов, ~${vram.toFixed(1)} МБ в видеопамяти без сжатия.`);
+  if (r.missingRegions.length) add("fail", "Скелет ссылается на отсутствующие регионы", r.missingRegions.join(", "), `В атласе нет регионов: ${r.missingRegions.join(", ")}.`);
+  if (r.unused.length) add("warn", `Лишние регионы в атласе: ${r.unused.length}`, r.unused.join(", "), `Убрать из атласа неиспользуемые картинки: ${r.unused.join(", ")}.`);
+  if (r.setupEmpty) add("warn", "Setup pose пустая", "В позе по умолчанию ничего не видно, всё включают анимации. Код, который раскладывает объект по габаритам setup pose, получит пустой прямоугольник: размеры брать по анимации или задавать константой.", "Setup pose пустая: если можно, оставить в ней видимое базовое состояние (например, основную кнопку).");
+  else add("ok", "Setup pose не пустая", "Габариты позы годятся для раскладки.");
+  const errs = r.anims.filter((a) => a.error);
+  if (errs.length) add("fail", "Анимация падает в рантайме", errs.map((a) => `${a.name}: ${a.error}`).join("; "), "Анимации падают при проигрывании: " + errs.map((a) => a.name).join(", ") + ".");
+  const statics = r.anims.filter((a) => a.duration === 0).map((a) => a.name);
+  const evs = [...new Set(r.anims.flatMap((a) => a.events))];
+  add("info", `${r.anims.length} ${plural(r.anims.length, "анимация", "анимации", "анимаций")}, ${r.data.skins.length} ${plural(r.data.skins.length, "скин", "скина", "скинов")}`,
+    `Сверить имена с ТЗ: код включает их по строке. ${statics.length ? `Статичные позы (0 с): ${statics.join(", ")}. ` : ""}` + (evs.length ? `События: ${evs.join(", ")}.` : "Событий нет: звук и логику по кадру анимации не привязать."));
+  const sizes = new Set(r.anims.filter((a) => a.w).map((a) => `${a.w}×${a.h}`));
+  if (sizes.size > 1) add("info", "Габариты анимаций различаются", "Блики и лучи выходят за базовый размер, центр у части анимаций смещён. Под раскладку брать фиксированный размер, а не габариты кадра.");
+  const clipAnims = r.anims.filter((a) => a.clip);
+  if (clipAnims.length) add("warn", `Клиппинг в ${clipAnims.length} ${plural(clipAnims.length, "анимации", "анимациях", "анимациях")}`,
+    clipAnims.map((a) => `${a.name}: до ${a.maxClipped} ${plural(a.maxClipped, "слота", "слотов", "слотов")} под маской`).join("; ") + ". Маска режет треугольники на CPU каждый кадр, в зацикленной анимации это постоянная нагрузка.",
+    `Клиппинг (маска) в ${clipAnims.map((a) => a.name).join(", ")}: если можно, заменить на заранее обрезанную картинку, особенно в зацикленных анимациях.`);
+  const heavy = r.anims.filter((a) => a.maxDraws > 6 || a.maxSlots > 40);
+  if (heavy.length) add("warn", "Много draw calls в кадре", heavy.map((a) => `${a.name}: ${a.maxDraws} draw calls, ${a.maxSlots} слотов`).join("; ") + ". Каждая смена блендинга в порядке отрисовки начинает новый draw call, подробности на вкладке «Порядок отрисовки».",
+    "Сгруппировать additive-слоты рядом в порядке отрисовки, чтобы сократить draw calls: " + heavy.map((a) => a.name).join(", ") + ".");
+  const od = r.anims.filter((a) => a.overdraw > 3);
+  if (od.length) add("info", "Высокая перерисовка", od.map((a) => `${a.name}: ×${a.overdraw.toFixed(1)}`).join("; ") + ". Столько раз в среднем закрашивается каждый пиксель габаритов: на слабых GPU это упирается в заливку.");
+  if (all.length > 1) {
+    const same = all.filter((s) => s.stem === set.stem);
+    if (same.length > 1) {
+      const regs = (s) => s.res.atlas ? s.res.atlas.regions.map((x) => x.name).sort().join() : "";
+      const skelSame = same.every((s) => s.hash === set.hash), regSame = same.every((s) => regs(s) === regs(set));
+      const sc = same.map((s) => `${s.name}: ${s.scale ?? 1}`).join(", ");
+      if (skelSame && regSame) add("ok", `Наборы разрешений согласованы (${same.length})`, `Скелет один и тот же, регионы совпадают. Масштаб атласов: ${sc}. Если сборка сама делает уменьшенные копии (например, AssetPack), достаточно старшего набора.`);
+      else add("fail", "Наборы разрешений расходятся", `${skelSame ? "" : "Скелеты разные. "}${regSame ? "" : "Наборы регионов разные. "}Масштаб: ${sc}.`, "Наборы разрешений собраны из разных версий: переэкспортировать все из одного проекта.");
+    }
+  }
+  return c;
+}
+
+// ---------- вывод отчёта ----------
+const esc = (s) => String(s).replace(/[&<>"]/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+const sym = { ok: "✓", warn: "!", fail: "×", info: "i" };
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+function renderReport() {
+  const set = st.cur, cs = set.checks, r = set.res, d = r.data;
+  $("checks").innerHTML = cs.map((c) => `<li class="${c.level}"><div class="dot">${sym[c.level]}</div><div><strong>${esc(c.title)}</strong>${c.detail ? `<p>${esc(c.detail)}</p>` : ""}</div></li>`).join("");
+  const fails = cs.filter((c) => c.level === "fail").length, warns = cs.filter((c) => c.level === "warn").length;
+  const v = $("verdict");
+  v.className = "verdict " + (fails ? "fail" : warns ? "warn" : "ok");
+  v.innerHTML = fails ? `<b>Не принимать</b><span>${fails} ${plural(fails, "блокер", "блокера", "блокеров")}${warns ? `, ${warns} ${plural(warns, "замечание", "замечания", "замечаний")}` : ""}. Вернуть дизайнеру.</span>`
+    : warns ? `<b>Принять с замечаниями</b><span>${warns} ${plural(warns, "замечание", "замечания", "замечаний")}. Работать можно, правки обсудить с дизайнером.</span>`
+    : `<b>Принять</b><span>Блокеров и замечаний нет. Осталось сверить имена анимаций с ТЗ и посмотреть глазами.</span>`;
+  const facts = [["Файлы", [set.skel, set.atlas, ...Object.values(set.images)].map((f) => `${esc(baseOf(f.path))} · ${(f.bytes.length / 1024).toFixed(0)} КБ`).join("<br>")], ["Версия", esc(r.version)]];
+  if (d) facts.push(["Кости / слоты", `${d.bones.length} / ${d.slots.length}`],
+    ["Констрейнты", `IK ${d.ikConstraints.length}, transform ${d.transformConstraints.length}, path ${d.pathConstraints.length}, physics ${d.physicsConstraints.length}`],
+    ["Меши", `${r.meshes.length}, вершин до ${r.meshes[0] ? r.meshes[0].verts : 0} в одном`], ["FPS в редакторе", d.fps], ["Масштаб атласа", set.scale ?? 1]);
+  $("facts").innerHTML = facts.map(([k, val]) => `<dt>${k}</dt><dd>${val}</dd>`).join("");
+  const rem = cs.filter((c) => c.remark).map((c, i) => `${i + 1}. ${c.remark}`);
+  $("remarks").value = rem.length ? `Приёмка ${set.stem} (${set.name}), Spine ${r.version}:\n` + rem.join("\n") : `Приёмка ${set.stem} (${set.name}): замечаний нет.`;
+  renderAnims(); renderMeshes(); renderSkins(); renderTracks();
+}
+function renderAnims() {
+  const r = st.cur.res, tb = $("anims");
+  if (!r.data) { tb.innerHTML = `<tr><td colspan="8" class="err">Экспорт ${esc(r.version)} не разбирается рантаймом ${RUNTIME}.</td></tr>`; return }
+  const run = st.run && st.run.hash === st.cur.hash ? st.run : null;
+  tb.innerHTML = r.anims.map((a, i) => {
+    const m = run && run.anims.find((x) => x.name === a.name);
+    return `<tr tabindex="0" data-a="${esc(a.name)}" class="${a.name === st.tracks[0].anim ? "on" : ""}"><td class="name">${esc(a.name)}</td><td class="num">${a.duration.toFixed(2)}</td>
+      <td><canvas class="heat" data-i="${i}" width="320" height="32" title="CPU на кадр по времени анимации"></canvas></td>
+      <td class="num">${a.maxDraws}</td><td class="num">${a.maxVerts}</td><td class="num">${a.overdraw ? "×" + a.overdraw.toFixed(1) : "-"}</td>
+      <td class="num">${m ? `${m.cpuAvg.toFixed(2)} / ${m.cpuP95.toFixed(2)}` : "-"}</td>
+      <td>${a.clip ? '<span class="tag">клиппинг</span> ' : ""}${a.duration === 0 ? '<span class="tag i">поза</span> ' : ""}${a.error ? '<span class="tag f">ошибка</span>' : ""}</td></tr>`;
+  }).join("");
+  const maxMs = Math.max(...r.anims.map((a) => a.maxMs), 1e-6);
+  tb.querySelectorAll("canvas.heat").forEach((cv) => drawHeat(cv, r.anims[+cv.dataset.i], maxMs));
+}
+function drawHeat(cv, a, maxMs) {
+  const g = cv.getContext("2d"), W = cv.width, H = cv.height, n = a.samples.length;
+  g.clearRect(0, 0, W, H);
+  g.fillStyle = css("--soft"); g.fillRect(0, 0, W, H);
+  for (let i = 0; i < n; i++) {
+    const k = Math.min(1, a.samples[i].ms / maxMs);
+    g.fillStyle = `hsl(${(1 - k) * 140}, 70%, ${45 + (1 - k) * 10}%)`;
+    const x0 = Math.floor(i / n * W), x1 = Math.ceil((i + 1) / n * W);
+    g.fillRect(x0, H * (1 - Math.max(0.25, k)), x1 - x0, H);
+  }
+}
+function renderMeshes() {
+  const r = st.cur.res;
+  $("meshes").innerHTML = r.data && r.meshes.length ? r.meshes.map((m) => `<tr><td class="name">${esc(m.name)}</td><td>${esc(m.skin)}</td><td class="num">${m.verts}</td><td class="num">${m.tris}</td><td class="num">${m.weighted ? m.bones : "-"}</td><td>${m.weighted ? "веса" : ""}${m.deform ? " ключи деформации" : ""}</td></tr>`).join("")
+    : `<tr><td colspan="6" class="hint">Мешей нет.</td></tr>`;
+}
+function renderSkins() {
+  const d = st.cur.res.data;
+  $("skin").innerHTML = d ? d.skins.map((s) => `<option>${esc(s.name)}</option>`).join("") : "";
+}
+function renderTracks() {
+  const d = st.cur && st.cur.res.data;
+  const opts = d ? d.animations.map((a) => a.name) : [];
+  $("tracks").innerHTML = st.tracks.map((t, i) => `<tr data-t="${i}"><td>${i}</td>
+    <td><select data-k="anim" aria-label="Анимация трека ${i}"><option value="">нет</option>${opts.map((o) => `<option ${o === t.anim ? "selected" : ""}>${esc(o)}</option>`).join("")}</select></td>
+    <td><input type="checkbox" data-k="loop" ${t.loop ? "checked" : ""} aria-label="Цикл трека ${i}"></td>
+    <td><input type="range" data-k="alpha" min="0" max="1" step="0.05" value="${t.alpha}" aria-label="Вес трека ${i}"></td>
+    <td>${i ? `<button class="sm" data-k="del">Убрать</button>` : ""}</td></tr>`).join("");
+}
+function renderSets() {
+  $("sets").innerHTML = st.sets.length > 1 ? '<span class="lab">Набор</span>' + st.sets.map((s, i) => `<button class="sm" data-i="${i}" aria-pressed="${s === st.cur}">${esc(s.name)}</button>`).join("") : "";
+}
+
+// ---------- сцена на Pixi ----------
+async function ensureApp() {
+  if (st.app) return;
+  const app = new PIXI.Application();
+  await app.init({ resizeTo: $("stage"), background: "#" + st.bg, antialias: true, autoDensity: true, resolution: Math.min(2, devicePixelRatio || 1), preference: "webgl", autoStart: false, sharedTicker: false });
+  app.ticker.stop();
+  app.canvas.classList.add("pixi");
+  $("stage").prepend(app.canvas);
+  st.app = app;
+  st.world = new PIXI.Container(); app.stage.addChild(st.world);
+  const gl = app.renderer.gl;
+  if (gl) {
+    st.gl = gl;
+    for (const fn of ["drawElements", "drawArrays", "drawElementsInstanced", "drawArraysInstanced"]) {
+      const orig = gl[fn]; if (!orig) continue;
+      gl[fn] = function () { st.glCalls++; return orig.apply(this, arguments) };
+    }
+    const ext = gl.getExtension("WEBGL_debug_renderer_info");
+    st.gpu = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+  }
+  st.maxTex = app.renderer.limits ? app.renderer.limits.maxBatchableTextures : 16;
+  try { new PerformanceObserver((l) => { st.longTasks += l.getEntries().length }).observe({ type: "longtask", buffered: false }) } catch {}
+  bindCamera();
+  requestAnimationFrame(loop);
+}
+function destroyInsts() {
+  for (const it of st.insts) it.destroy({ children: true });
+  st.insts = []; st.overlay = null;
+  if (st.cur && st.cur.sources) { for (const s of st.cur.sources) s.destroy(); st.cur.sources = null }
+}
+async function buildScene() {
+  const set = st.cur;
+  destroyInsts();
+  $("stage").querySelectorAll(".stage-err").forEach((e) => e.remove());
+  if (!set.res.data) return;
+  try {
+    const atlas = new S.TextureAtlas(set.atlasText);
+    set.sources = [];
+    for (const page of atlas.pages) {
+      const f = set.images[page.name]; if (!f) continue;
+      // UNPACK_PREMULTIPLY_ALPHA к ImageBitmap не применяется: домножаем при декодировании, как загрузчик Pixi
+      const pma = page.pma !== st.flip;
+      const bmp = await createImageBitmap(new Blob([f.bytes]), { premultiplyAlpha: pma ? "none" : "premultiply" });
+      const src = new PIXI.ImageSource({ resource: bmp, alphaMode: "premultiplied-alpha" });
+      set.sources.push(src);
+      page.setTexture(S.SpineTexture.from(src));
+    }
+    set.live = readSkeleton(set, atlas);
+    set.stateData = new S.AnimationStateData(set.live);
+    set.stateData.defaultMix = st.mix;
+    makeInstances(+$("inst").value || 1);
+    applyTracks(true);
+    if (!st.fitted) { fitView(); st.fitted = true }
+  } catch (e) {
+    $("stage").insertAdjacentHTML("beforeend", `<p class="stage-err">Сцена не собралась: ${esc(e.message)}</p>`);
+  }
+}
+function cellSize() {
+  const r = st.cur.res, b = r.anims.filter((a) => a.w).reduce((m, a) => ({ w: Math.max(m.w, a.w), h: Math.max(m.h, a.h) }), { w: 0, h: 0 });
+  return { w: (b.w || 400) * 1.1, h: (b.h || 400) * 1.1 };
+}
+function makeInstances(n) {
+  const set = st.cur;
+  for (const it of st.insts) it.destroy({ children: true });
+  st.insts = [];
+  const cols = Math.ceil(Math.sqrt(n)), cell = cellSize();
+  for (let i = 0; i < n; i++) {
+    const sp = new S.Spine({ skeletonData: set.live, autoUpdate: false });
+    sp.state.data = set.stateData;
+    sp.x = (i % cols - (cols - 1) / 2) * cell.w;
+    sp.y = (Math.floor(i / cols) - (Math.ceil(n / cols) - 1) / 2) * cell.h;
+    const skin = $("skin").value; if (skin) { sp.skeleton.setSkinByName(skin); sp.skeleton.setSlotsToSetupPose() }
+    // замер фаз: вершины и клиппинг считаются при рендере
+    const orig = sp._validateAndTransformAttachments.bind(sp);
+    sp._validateAndTransformAttachments = () => { const t = performance.now(); orig(); st.vertMs += performance.now() - t };
+    st.world.addChild(sp); st.insts.push(sp);
+  }
+  const main = st.insts[0];
+  st.overlay = new PIXI.Graphics(); main.addChild(st.overlay);
+  main.state.addListener({ event: (entry, ev) => logEvent(entry, ev) });
+  applyDebug();
+  $("hud").textContent = "";
+}
+function applyTracks(reset) {
+  const d = st.cur && st.cur.live; if (!d) return;
+  st.insts.forEach((sp, idx) => {
+    if (reset) { sp.state.clearTracks(); sp.skeleton.setToSetupPose() }
+    st.tracks.forEach((t, i) => {
+      if (!t.anim || !d.findAnimation(t.anim)) { sp.state.setEmptyAnimation(i, st.mix); return }
+      const cur = sp.state.getCurrent(i);
+      const e = cur && cur.animation.name === t.anim && !reset ? cur : sp.state.setAnimation(i, t.anim, t.loop);
+      e.loop = t.loop; e.alpha = t.alpha;
+      if (reset && idx > 0 && e.animation.duration > 0) e.trackTime = (idx * 0.137) % e.animation.duration;
+    });
+    sp.update(0);
+  });
+  const w = st.mode === "web" && st.web && st.web.animationState ? st.web : null;
+  if (w) {
+    const t0 = st.tracks[0];
+    if (t0.anim && w.skeleton.data.findAnimation(t0.anim)) { const cur = w.animationState.getCurrent(0); if (reset || !cur || cur.animation.name !== t0.anim) w.setAnimation(t0.anim, t0.loop) }
+    tracksOn(w.animationState, false, 0, w.skeleton.data);
+    for (const c of st.webCopies) { if (reset) c.sk.setToSetupPose(); tracksOn(c.state, reset, c.i, c.sk.data); c.state.apply(c.sk); c.sk.updateWorldTransform(SPW.Physics.update) }
+  }
+  updateTimeUI();
+}
+function playAnim(name) {
+  st.tracks[0].anim = name;
+  applyTracks(false);
+  if (!st.playing) togglePlay();
+  document.querySelectorAll("#anims tr").forEach((tr) => tr.classList.toggle("on", tr.dataset.a === name));
+  renderTracks();
+}
+function seek(t) {
+  if (st.mode === "web") {
+    const e = mainEntry(); if (e && st.web) { e.trackTime = t; st.web.animationState.apply(st.web.skeleton); webApply() }
+    for (const c of st.webCopies) { const ce = c.state.getCurrent(0); if (ce) { ce.trackTime = t; c.state.apply(c.sk); c.sk.updateWorldTransform(SPW.Physics.update) } }
+    updateTimeUI(); st.needOrder = true; return
+  }
+  for (const sp of st.insts) { const e = sp.state.getCurrent(0); if (e) { e.trackTime = t; sp.update(0) } }
+  updateTimeUI(); st.needOrder = true;
+}
+
+// ---------- второй рантайм: spine-webgl Web Player ----------
+const b64 = (bytes, mime) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(new Blob([bytes], { type: mime })) });
+const mainEntry = () => st.mode === "web" ? (st.web && st.web.animationState ? st.web.animationState.getCurrent(0) : null) : (st.insts[0] ? st.insts[0].state.getCurrent(0) : null);
+function stopWeb() {
+  if (st.web) { try { st.web.dispose() } catch {} st.web = null }
+  $("webp").innerHTML = "";
+}
+async function startWeb() {
+  stopWeb();
+  const set = st.cur; if (!set || !set.res.data) return;
+  if (!set.uris) {
+    set.uris = { skel: await b64(set.skel.bytes, "application/octet-stream"), atlas: await b64(set.atlas.bytes, "text/plain"), pages: {} };
+    for (const [p, f] of Object.entries(set.images)) set.uris.pages[p] = await b64(f.bytes, extOf(p) === "webp" ? "image/webp" : extOf(p) === "avif" ? "image/avif" : "image/png");
+  }
+  if (st.mode !== "web" || st.cur !== set) return;
+  const raw = {}, skelKey = baseOf(set.skel.path), atlasKey = baseOf(set.atlas.path);
+  raw[skelKey] = set.uris.skel; raw[atlasKey] = set.uris.atlas;
+  for (const p of set.pages) if (set.uris.pages[p]) raw[p] = set.uris.pages[p];
+  const cfg = { skeleton: skelKey, atlas: atlasKey, rawDataURIs: raw, premultipliedAlpha: set.res.pma !== st.flip,
+    backgroundColor: st.bg, showControls: true, preserveDrawingBuffer: false,
+    viewport: { padLeft: "6%", padRight: "6%", padTop: "8%", padBottom: "8%", transitionTime: 0 },
+    frame: (p, d) => webFrame(p, d),
+    updateWorldTransform: (p) => { p.skeleton.updateWorldTransform(SPW.Physics.update); st.wt.spine = performance.now() - st.wt.t0 },
+    update: (p) => webCamera(p),
+    draw: (p) => webDraw(p),
+    success: (p) => {
+      p.speed = st.speed; p.animationState.data.defaultMix = st.mix;
+      p.animationState.addListener({ event: (e, ev) => logEvent(e, ev) });
+      hookWebGL(p);
+      makeWebCopies(); applyTracks(false); applyDebug(); if (!st.playing) p.pause();
+    },
+    error: (p, msg) => $("webp").insertAdjacentHTML("beforeend", `<p class="stage-err">${esc(msg)}</p>`) };
+  if (st.tracks[0].anim) cfg.animation = st.tracks[0].anim;
+  if ($("skin").value) cfg.skin = $("skin").value;
+  st.web = new SPW.SpinePlayer($("webp"), cfg);
+}
+function setMode(m) {
+  st.mode = m;
+  document.querySelectorAll("#rt-seg button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.rt === m));
+  $("stage").classList.toggle("web", m === "web"); $("webp").hidden = m !== "web";
+  $("bench").disabled = st.benchBusy;
+  $("rt-hint").textContent = m === "web" ? "Рендер spine-webgl: батч рвётся на каждой смене текстуры и блендинга, вершины и клиппинг считаются внутри отрисовки." : "Профайлер, замер, копии и отладочные слои работают в обоих рантаймах.";
+  st.ring = []; st.sel = -1; st.webCam = { z: 1, x: 0, y: 0, one: false };
+  if (m === "web") startWeb(); else stopWeb();
+  st.needOrder = true;
+}
+// замер фаз в плеере: frame → (состояние) → updateWorldTransform → update → drawSkeleton → draw
+st.wt = { t0: 0, spine: 0, verts: 0, tr: 0 };
+st.webCopies = [];
+function hookWebGL(p) {
+  const gl = p.context.gl;
+  if (!gl.__counted) {
+    for (const fn of ["drawElements", "drawArrays", "drawElementsInstanced", "drawArraysInstanced"]) {
+      const orig = gl[fn]; if (!orig) continue;
+      gl[fn] = function () { st.glCalls++; return orig.apply(this, arguments) };
+    }
+    gl.__counted = true;
+  }
+  const r = p.sceneRenderer, orig = r.drawSkeleton.bind(r);
+  r.drawSkeleton = (sk, pma, a, b) => { const t = performance.now(); orig(sk, pma, a, b); st.wt.verts += performance.now() - t };
+  if (!st.gpu) { const ext = gl.getExtension("WEBGL_debug_renderer_info"); st.gpu = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER) }
+}
+function instCount() { return Math.max(1, Math.min(200, Math.round(+$("inst").value || 1))) }
+function makeWebCopies() {
+  const p = st.web; st.webCopies = [];
+  if (!p || !p.skeleton) return;
+  const n = instCount(), cols = Math.ceil(Math.sqrt(n)), cell = cellSize();
+  for (let i = 1; i < n; i++) {
+    const sk = new SPW.Skeleton(p.skeleton.data);
+    if ($("skin").value) sk.setSkinByName($("skin").value);
+    sk.setToSetupPose();
+    sk.x = (i % cols) * cell.w; sk.y = -Math.floor(i / cols) * cell.h;
+    const state = new SPW.AnimationState(p.animationState.data);
+    st.webCopies.push({ sk, state, i });
+  }
+  st.webGrid = { cols, rows: Math.ceil(n / cols), cell };
+}
+function tracksOn(state, reset, idx, dataSk) {
+  st.tracks.forEach((t, i) => {
+    if (!t.anim || !dataSk.findAnimation(t.anim)) { state.setEmptyAnimation(i, st.mix); return }
+    const cur = state.getCurrent(i);
+    const e = cur && cur.animation.name === t.anim && !reset ? cur : state.setAnimation(i, t.anim, t.loop);
+    e.loop = t.loop; e.alpha = t.alpha;
+    if (reset && idx > 0 && e.animation.duration > 0) e.trackTime = (idx * 0.137) % e.animation.duration;
+  });
+}
+function webFrame(p, d) {
+  st.glCalls = 0; st.wt.verts = 0; st.wt.spine = 0;
+  st.wt.t0 = performance.now();
+  if (!p.paused) for (const c of st.webCopies) { c.sk.update(d); c.state.update(d); c.state.apply(c.sk); c.sk.updateWorldTransform(SPW.Physics.update) }
+}
+function webCamera(p) {
+  st.wt.tr = performance.now();
+  const cam = p.sceneRenderer.camera, c = st.webCam || (st.webCam = { z: 1, x: 0, y: 0, one: false });
+  const dpr = p.canvas.width / Math.max(1, p.canvas.clientWidth);
+  if (st.webCopies.length && st.webGrid) {
+    const g = st.webGrid, W = g.cols * g.cell.w, H = g.rows * g.cell.h;
+    cam.position.x = (g.cols - 1) / 2 * g.cell.w; cam.position.y = -(g.rows - 1) / 2 * g.cell.h;
+    cam.zoom = Math.max(W / p.canvas.width, H / p.canvas.height) / 0.85;
+  }
+  if (c.one) cam.zoom = 1 / dpr;
+  cam.zoom /= c.z;
+  cam.position.x -= c.x * dpr * cam.zoom; cam.position.y += c.y * dpr * cam.zoom;
+  cam.update();
+}
+const WCOL = {};
+const wcol = (hex, a = 1) => WCOL[hex + a] || (WCOL[hex + a] = new SPW.Color(((hex >> 16) & 255) / 255, ((hex >> 8) & 255) / 255, (hex & 255) / 255, a));
+function webDraw(p) {
+  const r = p.sceneRenderer, pma = p.config.premultipliedAlpha;
+  if (st.webCopies.length || dbg("d-bounds") || dbg("d-setup") || dbg("d-weights") || st.hiSlot) {
+    r.begin();
+    for (const c of st.webCopies) r.drawSkeleton(c.sk, pma);
+    const sk = p.skeleton, lw = r.camera.zoom;
+    if (dbg("d-bounds")) { const b = sk.getBoundsRect(); if (b.width > 0) r.rect(false, b.x, b.y, b.width, b.height, wcol(0x7d97ff)) }
+    if (dbg("d-setup") && st.cur.res.setupBounds) { const b = st.cur.res.setupBounds; r.rect(false, b.x, -(b.y + b.height), b.width, b.height, wcol(0xf0b456)) }
+    if (dbg("d-weights")) for (const slot of sk.drawOrder) {
+      const a = slot.getAttachment();
+      if (!(a instanceof SPW.MeshAttachment) || !a.bones || !slot.bone.active) continue;
+      const n = a.worldVerticesLength; if (n > wbuf.length) continue;
+      a.computeWorldVertices(slot, 0, n, wbuf, 0, 2);
+      let bi = 0, vi = 0;
+      for (let v = 0; v < n / 2; v++) {
+        const cnt = a.bones[bi++]; let best = -1, bw = 0;
+        for (let j = 0; j < cnt; j++) { const b = a.bones[bi++], w = a.vertices[vi + 2]; vi += 3; if (w > bw) { bw = w; best = b } }
+        r.circle(true, wbuf[v * 2], wbuf[v * 2 + 1], (1 + 3 * bw) * lw * 1.5, wcol(hsl(boneHue(best), 0.8, 0.6), 0.9), 8);
+      }
+    }
+    if (st.hiSlot) {
+      const slot = sk.findSlot(st.hiSlot), a = slot && slot.getAttachment();
+      if (a instanceof SPW.RegionAttachment) { a.computeWorldVertices(slot, wbuf, 0, 2); r.polygon(wbuf, 0, 4, wcol(0xff5fd2)) }
+      else if (a instanceof SPW.MeshAttachment && a.worldVerticesLength <= wbuf.length) { a.computeWorldVertices(slot, 0, a.worldVerticesLength, wbuf, 0, 2); r.polygon(wbuf, 0, (a.hullLength || a.worldVerticesLength) / 2, wcol(0xff5fd2)) }
+    }
+    r.end();
+  }
+  const now = performance.now();
+  st.draws = st.glCalls;
+  if (!p.paused && st.playing) {
+    const e = p.animationState.getCurrent(0);
+    pushFrame({ dt: p.time.delta * 1000, spine: st.wt.spine, verts: st.wt.verts, render: Math.max(0, now - st.wt.tr - st.wt.verts), draws: st.glCalls,
+      anim: e ? e.animation.name : "", t: e ? e.getAnimationTime() : 0, n: instCount() });
+  }
+}
+function webApply() {
+  const w = st.web; if (!w || !w.animationState) return;
+  w.skeleton.updateWorldTransform(SPW.Physics.update);
+}
+
+// ---------- камера ----------
+function applyCam() {
+  const r = st.app.renderer, c = st.cam;
+  st.world.scale.set(c.z); st.world.position.set(r.width / r.resolution / 2 + c.x, r.height / r.resolution / 2 + c.y);
+}
+function fitView() {
+  if (!st.app || !st.cur || !st.cur.res.anims) return;
+  const n = st.insts.length, cols = Math.ceil(Math.sqrt(n)), rows = Math.ceil(n / cols), cell = cellSize();
+  const a = st.cur.res.anims.find((x) => x.name === st.tracks[0].anim) || st.cur.res.anims[0];
+  const W = st.app.screen.width, H = st.app.screen.height;
+  const w = n > 1 ? cols * cell.w : (a && a.w) || cell.w, h = n > 1 ? rows * cell.h : (a && a.h) || cell.h;
+  st.cam.z = Math.min(W / w, H / h) * 0.85;
+  const cx = n > 1 || !a || !a.w ? 0 : a.x + a.w / 2, cy = n > 1 || !a || !a.w ? 0 : a.y + a.h / 2;
+  st.cam.x = -cx * st.cam.z; st.cam.y = -cy * st.cam.z; applyCam();
+}
+function zoomAt(f, px, py) {
+  const c = st.cam, W = st.app.screen.width / 2, H = st.app.screen.height / 2;
+  const nz = Math.max(0.02, Math.min(40, c.z * f)), k = nz / c.z;
+  c.x = (px - W) - ((px - W) - c.x) * k; c.y = (py - H) - ((py - H) - c.y) * k; c.z = nz; applyCam();
+}
+function bindCamera() {
+  const el = st.app.canvas;
+  el.addEventListener("wheel", (e) => { e.preventDefault(); const b = el.getBoundingClientRect(); zoomAt(Math.exp(-e.deltaY * 0.0015), e.clientX - b.left, e.clientY - b.top) }, { passive: false });
+  let drag = null;
+  el.addEventListener("pointerdown", (e) => { drag = { x: e.clientX, y: e.clientY, cx: st.cam.x, cy: st.cam.y }; el.setPointerCapture(e.pointerId) });
+  el.addEventListener("pointermove", (e) => { if (!drag) return; st.cam.x = drag.cx + e.clientX - drag.x; st.cam.y = drag.cy + e.clientY - drag.y; applyCam() });
+  el.addEventListener("pointerup", () => { drag = null });
+  new ResizeObserver(() => { if (st.app) { st.app.resize(); applyCam() } }).observe($("stage"));
+  const wc = () => st.webCam || (st.webCam = { z: 1, x: 0, y: 0, one: false });
+  $("z-in").onclick = () => st.mode === "web" ? wc().z *= 1.25 : zoomAt(1.25, st.app.screen.width / 2, st.app.screen.height / 2);
+  $("z-out").onclick = () => st.mode === "web" ? wc().z *= 0.8 : zoomAt(0.8, st.app.screen.width / 2, st.app.screen.height / 2);
+  $("z-1").onclick = () => { if (st.mode === "web") { Object.assign(wc(), { z: 1, one: true }); return } st.cam.x = st.cam.x / st.cam.z; st.cam.y = st.cam.y / st.cam.z; st.cam.z = 1; applyCam() };
+  $("z-fit").onclick = () => st.mode === "web" ? st.webCam = { z: 1, x: 0, y: 0, one: false } : fitView();
+  const wp = $("webp");
+  wp.addEventListener("wheel", (e) => { if (st.mode !== "web") return; e.preventDefault(); wc().z *= Math.exp(-e.deltaY * 0.0015) }, { passive: false });
+  let wd = null;
+  wp.addEventListener("pointerdown", (e) => { if (e.target.tagName !== "CANVAS") return; wd = { x: e.clientX, y: e.clientY, cx: wc().x, cy: wc().y } });
+  window.addEventListener("pointermove", (e) => { if (!wd) return; wc().x = wd.cx + (e.clientX - wd.x); wc().y = wd.cy + (e.clientY - wd.y) });
+  window.addEventListener("pointerup", () => { wd = null });
+}
+
+// ---------- отладочные слои ----------
+const dbg = (id) => $(id).checked;
+function applyDebug() {
+  if (st.web && st.web.config) st.web.config.debug = { bones: dbg("d-bones"), regions: dbg("d-regions"), meshes: dbg("d-tris"), hulls: dbg("d-hull"),
+    clipping: dbg("d-clip"), bounds: dbg("d-bbox"), paths: dbg("d-paths"), points: false };
+  const main = st.insts[0]; if (!main) return;
+  const any = ["d-bones", "d-regions", "d-hull", "d-tris", "d-clip", "d-bbox", "d-paths"].some(dbg);
+  if (any) {
+    if (!st.debugR) st.debugR = new S.SpineDebugRenderer();
+    const r = st.debugR;
+    r.drawBones = dbg("d-bones"); r.drawRegionAttachments = dbg("d-regions"); r.drawMeshHull = dbg("d-hull"); r.drawMeshTriangles = dbg("d-tris");
+    r.drawClipping = dbg("d-clip"); r.drawBoundingBoxes = dbg("d-bbox"); r.drawPaths = dbg("d-paths"); r.drawEvents = false;
+    r.lineWidth = 1 / Math.max(0.2, st.cam.z);
+    if (main.debug !== r) main.debug = r;
+  } else if (main.debug) main.debug = undefined;
+}
+const boneHue = (i) => (i * 137.508) % 360;
+function hsl(h, s, l) { const a = s * Math.min(l, 1 - l), f = (n) => { const k = (n + h / 30) % 12; return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)) }; return (Math.round(f(0) * 255) << 16) | (Math.round(f(8) * 255) << 8) | Math.round(f(4) * 255) }
+const wbuf = new Float32Array(8192);
+function drawOverlay() {
+  const g = st.overlay, main = st.insts[0]; if (!g || !main) return;
+  g.clear();
+  const sk = main.skeleton, lw = 1.5 / st.cam.z;
+  if (dbg("d-bounds")) { const b = sk.getBoundsRect(); if (b.width > 0) g.rect(b.x, b.y, b.width, b.height).stroke({ width: lw, color: 0x7d97ff }) }
+  if (dbg("d-setup")) {
+    const sb = st.cur.res.setupBounds;
+    if (sb) g.rect(sb.x, sb.y, sb.width, sb.height).stroke({ width: lw, color: 0xf0b456 });
+  }
+  if (dbg("d-weights")) {
+    for (const slot of sk.drawOrder) {
+      const a = slot.getAttachment();
+      if (!(a instanceof S.MeshAttachment) || !a.bones || !slot.bone.active) continue;
+      const n = a.worldVerticesLength; if (n > wbuf.length) continue;
+      a.computeWorldVertices(slot, 0, n, wbuf, 0, 2);
+      const bones = a.bones, vs = a.vertices;
+      let bi = 0, vi = 0;
+      for (let v = 0; v < n / 2; v++) {
+        const c = bones[bi++]; let best = -1, bw = 0;
+        for (let j = 0; j < c; j++) { const b = bones[bi++], w = vs[vi + 2]; vi += 3; if (w > bw) { bw = w; best = b } }
+        g.circle(wbuf[v * 2], wbuf[v * 2 + 1], (1 + 3 * bw) * lw).fill({ color: hsl(boneHue(best), 0.8, 0.6), alpha: 0.9 });
+      }
+    }
+  }
+  if (st.hiSlot) {
+    const slot = sk.findSlot(st.hiSlot), a = slot && slot.getAttachment();
+    if (a && (a instanceof S.MeshAttachment || a instanceof S.RegionAttachment)) {
+      const n = a instanceof S.MeshAttachment ? a.worldVerticesLength : 8;
+      if (n <= wbuf.length) {
+        a instanceof S.MeshAttachment ? a.computeWorldVertices(slot, 0, n, wbuf, 0, 2) : a.computeWorldVertices(slot, wbuf, 0, 2);
+        const pts = a instanceof S.MeshAttachment ? (a.hullLength ? Array.from(wbuf.subarray(0, a.hullLength)) : Array.from(wbuf.subarray(0, n))) : Array.from(wbuf.subarray(0, 8));
+        g.poly(pts, true).stroke({ width: 2 * lw, color: 0xff5fd2 });
+      }
+    }
+  }
+}
+
+// ---------- цикл кадра и профайлер ----------
+let last = 0;
+function loop(now) {
+  requestAnimationFrame(loop);
+  if (st.mode === "web" || !st.app || !st.insts.length) return;
+  const dt = last ? Math.min(0.1, (now - last) / 1000) : 1 / 60; last = now;
+  const step = st.playing ? dt * st.speed : 0;
+  const t0 = performance.now();
+  if (st.playing) for (const sp of st.insts) sp.update(step);
+  const t1 = performance.now();
+  st.vertMs = 0; st.glCalls = 0;
+  drawOverlay();
+  const t2 = performance.now();
+  st.app.renderer.render(st.app.stage);
+  const t3 = performance.now();
+  const e = st.insts[0].state.getCurrent(0);
+  if (st.playing) pushFrame({ dt: dt * 1000, spine: t1 - t0, verts: st.vertMs, render: Math.max(0, t3 - t2 - st.vertMs), draws: st.glCalls,
+      anim: e ? e.animation.name : "", t: e ? e.getAnimationTime() : 0, n: st.insts.length });
+  st.draws = st.glCalls;
+}
+function pushFrame(f) {
+  st.ring.push(f);
+  if (st.ring.length > RING) st.ring.shift();
+  if (st.benchSink) st.benchSink(f);
+}
+// интерфейс профайлера обновляется общим таймером для обоих рантаймов
+function uiTick() {
+  requestAnimationFrame(uiTick);
+  if (!st.cur) return;
+  if ((st.uf = (st.uf || 0) + 1) % 6 !== 0 && st.playing) return;
+  updateTimeUI(); drawProf(); updateHud();
+  if (st.needOrder || st.uf % 30 === 0) renderOrder();
+  if (st.uf % 60 === 0) renderPredict();
+}
+requestAnimationFrame(uiTick);
+const avg = (a) => a.length ? a.reduce((s, x) => s + x, 0) / a.length : 0;
+const pct = (a, p) => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.floor(s.length * p))] };
+function updateHud() {
+  const tail = st.ring.slice(-60);
+  const fps = tail.length ? 1000 / avg(tail.map((f) => f.dt)) : 0;
+  const cpu = avg(tail.map((f) => f.spine + f.verts + f.render));
+  const n = st.mode === "web" ? 1 + st.webCopies.length : st.insts.length;
+  $("hud").textContent = `${st.mode === "web" ? "WebGL" : "Pixi"} · ${fps.toFixed(0)} FPS · CPU ${cpu.toFixed(2)} мс · ${st.draws} draw calls · ${n} ${plural(n, "копия", "копии", "копий")}`;
+  const sp = tail.map((f) => f.spine + f.verts);
+  const ms = (v) => (v < 0.1 ? v.toFixed(3) : v.toFixed(2)) + " мс";
+  const kv = [["Spine CPU, ср.", ms(avg(sp))], ["Spine CPU, p95", ms(pct(sp, 0.95))], ["Рендер CPU, ср.", ms(avg(tail.map((f) => f.render)))],
+    ["FPS", fps.toFixed(0)], ["Draw calls", st.draws], ["Доля бюджета", (cpu / BUDGET_MS * 100).toFixed(0) + "%"], ["Оценка CPU", st.score ? `~${Math.round(st.score)} GB6` : "-"]];
+  $("dev-kv").innerHTML = kv.map(([k, v]) => `<div><b>${v}</b><span>${k}</span></div>`).join("");
+}
+function drawProf() {
+  const cv = $("prof"), dpr = Math.min(2, devicePixelRatio || 1);
+  const W = Math.round(cv.clientWidth * dpr), H = Math.round(cv.clientHeight * dpr);
+  if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H }
+  const g = cv.getContext("2d"), ring = st.ring;
+  g.clearRect(0, 0, W, H);
+  const maxMs = Math.max(BUDGET_MS * 1.2, pct(ring.map((f) => f.spine + f.verts + f.render), 0.98)) * 1.1;
+  const y = (ms) => H - ms / maxMs * H, bw = W / RING;
+  const cs = [css("--c-spine"), css("--c-verts"), css("--c-render")];
+  ring.forEach((f, i) => {
+    const x = i * bw; let base = 0;
+    [f.spine, f.verts, f.render].forEach((v, k) => { const top = Math.max(0, y(base + v)); g.fillStyle = cs[k]; g.fillRect(x, top, Math.max(1, bw - 0.5), Math.max(0, y(base) - top)); base += v });
+  });
+  g.strokeStyle = css("--c-budget"); g.setLineDash([4 * dpr, 4 * dpr]); g.lineWidth = dpr;
+  g.beginPath(); g.moveTo(0, y(BUDGET_MS)); g.lineTo(W, y(BUDGET_MS)); g.stroke(); g.setLineDash([]);
+  g.fillStyle = css("--muted"); g.font = `${11 * dpr}px ${css("--mono") || "monospace"}`;
+  g.fillText(`${maxMs.toFixed(1)} мс`, 4 * dpr, 12 * dpr); g.fillText("16.7", 4 * dpr, y(BUDGET_MS) - 3 * dpr);
+  if (st.sel >= 0 && st.sel < ring.length) { g.strokeStyle = css("--fg"); g.lineWidth = dpr; g.strokeRect(st.sel * bw, 0, Math.max(2, bw), H) }
+  showFrame(st.sel >= 0 && st.sel < ring.length ? ring[st.sel] : ring[ring.length - 1], st.sel >= 0);
+}
+function showFrame(f, picked) {
+  if (!f) { $("frame-kv").innerHTML = ""; return }
+  const ms = (v) => (v < 0.1 ? v.toFixed(3) : v.toFixed(2)) + " мс";
+  const kv = [[ms(f.spine), "состояние и кости"], [ms(f.verts), st.mode === "web" ? "вершины, клиппинг, батчи" : "вершины и клиппинг"], [ms(f.render), "рендер"],
+    [f.dt.toFixed(1) + " мс", "интервал кадра"], [f.draws, "draw calls"], [`${f.anim || "-"} @ ${f.t.toFixed(2)}`, picked ? "выбранный кадр" : "последний кадр"]];
+  $("frame-kv").innerHTML = kv.map(([v, k]) => `<div><b>${esc(v)}</b><span>${k}</span></div>`).join("");
+}
+function renderOrder() {
+  st.needOrder = false;
+  if ($("t-order").hidden) return;
+  const web = st.mode === "web";
+  const sk = web ? st.web && st.web.skeleton : st.insts[0] && st.insts[0].skeleton; if (!sk) return;
+  const w = frameWork(sk, true, web ? 1 : st.maxTex || 16, web ? SPW : S);
+  $("order-sum").textContent = `Текущий кадр: ${w.slots} видимых слотов, ${w.draws} draw calls по порядку отрисовки, ${w.verts} вершин, ${w.clipped} под клиппингом. Оранжевая черта отмечает начало нового draw call. Клик по строке подсвечивает вложение на сцене.`;
+  $("order").innerHTML = w.order.map((o, i) => `<tr data-s="${esc(o.slot)}" class="${o.reason && i ? "brk" : ""}${st.hiSlot === o.slot ? " on" : ""}"><td class="num">${i + 1}</td><td class="name">${esc(o.slot)}</td><td class="name">${esc(o.att)}</td><td>${o.blend}</td><td>${esc(o.page)}</td><td class="num">${o.v}</td><td>${o.reason && i ? esc(o.reason) : ""}${o.clip ? ' <span class="tag">клиппинг</span>' : ""}</td></tr>`).join("");
+}
+function updateTimeUI() {
+  const e = mainEntry();
+  const dur = e ? e.animation.duration : 0, t = e ? e.getAnimationTime() : 0;
+  $("time").textContent = `${t.toFixed(2)} / ${dur.toFixed(2)} с`;
+  if (document.activeElement !== $("scrub")) $("scrub").value = dur ? Math.round(t / dur * 1000) : 0;
+}
+function logEvent(entry, ev) {
+  const el = $("evlog"), d = ev.data;
+  const parts = [`${entry.getAnimationTime().toFixed(3)} с`, entry.animation.name, d.name];
+  if (ev.intValue) parts.push(`int=${ev.intValue}`); if (ev.floatValue) parts.push(`float=${ev.floatValue}`);
+  if (ev.stringValue) parts.push(`"${ev.stringValue}"`); if (d.audioPath) parts.push(`звук ${d.audioPath}`);
+  el.insertAdjacentHTML("afterbegin", `<div>${esc(parts.join(" · "))}</div>`);
+  while (el.childElementCount > 300) el.lastElementChild.remove();
+}
+function togglePlay() {
+  st.playing = !st.playing; $("play").textContent = st.playing ? "Пауза" : "Играть";
+  if (st.playing) st.sel = -1;
+  if (st.web) st.playing ? st.web.play() : st.web.pause();
+}
+
+// ---------- замер всех анимаций ----------
+async function bench() {
+  if (st.benchBusy || !st.cur || !st.cur.res.data) return;
+  st.benchBusy = true; $("bench").disabled = true;
+  const prevTrack = st.tracks[0].anim, out = [], lt0 = st.longTasks;
+  if (!st.playing) togglePlay();
+  for (const a of st.cur.res.anims) {
+    $("bench").textContent = `Замер: ${a.name}`;
+    st.tracks[0].anim = a.name; applyTracks(true);
+    await new Promise((r) => setTimeout(r, 150));
+    const frames = [];
+    st.benchSink = (f) => frames.push(f);
+    await new Promise((r) => setTimeout(r, Math.max(1000, a.duration * 1000)));
+    st.benchSink = null;
+    const cpu = frames.map((f) => f.spine + f.verts);
+    out.push({ name: a.name, frames: frames.length, cpuAvg: avg(cpu), cpuP95: pct(cpu, 0.95), cpuMax: Math.max(0, ...cpu),
+      renderAvg: avg(frames.map((f) => f.render)), fps: frames.length ? 1000 / avg(frames.map((f) => f.dt)) : 0, draws: Math.max(0, ...frames.map((f) => f.draws)) });
+  }
+  st.run = { v: 2, kind: "spine-acceptance-run", runtime: st.mode, score: st.score, hash: st.cur.hash, set: `${st.cur.stem} (${st.cur.name})`, date: new Date().toISOString(),
+    device: deviceName(), gpu: st.gpu || "?", dpr: devicePixelRatio, instances: instCount(), longTasks: st.longTasks - lt0, anims: out };
+  st.tracks[0].anim = prevTrack; applyTracks(true);
+  $("bench").textContent = "Замерить все анимации"; $("bench").disabled = false; st.benchBusy = false; $("copy-run").disabled = false;
+  renderAnims(); renderCompare(); renderPredict();
+}
+function deviceName() {
+  const ua = navigator.userAgent;
+  const m = /\(([^)]+)\)/.exec(ua);
+  return (navigator.userAgentData && navigator.userAgentData.platform ? navigator.userAgentData.platform + " · " : "") + (m ? m[1].split(";").slice(0, 3).join(";") : ua.slice(0, 60));
+}
+function renderCompare() {
+  const runs = [st.run, ...(st.others || [])].filter(Boolean);
+  if (!runs.length) { $("cmp-wrap").hidden = true; return }
+  $("cmp-wrap").hidden = false;
+  $("cmp-head").innerHTML = `<tr><th>Анимация, Spine CPU ср./p95 мс</th>${runs.map((r, i) => `<th class="num" title="${esc(r.gpu)}">${i ? esc(r.device).slice(0, 28) : "это устройство"}<br><span class="lab">${esc(r.runtime || "pixi")}, ${r.instances} ${plural(r.instances, "копия", "копии", "копий")}</span></th>`).join("")}</tr>`;
+  const names = [...new Set(runs.flatMap((r) => r.anims.map((a) => a.name)))];
+  $("cmp-body").innerHTML = names.map((n) => `<tr><td class="name">${esc(n)}</td>${runs.map((r) => { const a = r.anims.find((x) => x.name === n); return `<td class="num">${a ? `${a.cpuAvg.toFixed(2)} / ${a.cpuP95.toFixed(2)}` : "-"}</td>` }).join("")}</tr>`).join("")
+    + `<tr><td>FPS, мин. по анимациям</td>${runs.map((r) => `<td class="num">${Math.min(...r.anims.map((a) => a.fps)).toFixed(0)}</td>`).join("")}</tr>`
+    + `<tr><td>GPU</td>${runs.map((r) => `<td class="num" style="white-space:normal;min-width:120px">${esc(r.gpu)}</td>`).join("")}</tr>`;
+}
+
+// ---------- прогноз по устройствам ----------
+// gb: Geekbench 6 single-core (публичные результаты, округлено), fill: паспортная заливка GPU, Гпикс/с
+const DEVICES = [
+  { name: "Redmi 12", chip: "Helio G88 · Mali-G52 MC2", gb: 410, fill: 2.0 },
+  { name: "Samsung Galaxy A15", chip: "Helio G99 · Mali-G57 MC2", gb: 730, fill: 2.4 },
+  { name: "Samsung Galaxy A35", chip: "Exynos 1380 · Mali-G68 MP5", gb: 1000, fill: 5.0 },
+  { name: "Google Pixel 7", chip: "Tensor G2 · Mali-G710 MP7", gb: 1400, fill: 11.9 },
+  { name: "Google Pixel 9", chip: "Tensor G4 · Mali-G715 MP7", gb: 1950, fill: 12.6 },
+  { name: "Samsung Galaxy S24", chip: "Exynos 2400 · Xclipse 940", gb: 2150, fill: 18 },
+  { name: "iPhone 12", chip: "A14 · GPU 4 ядра", gb: 2100, fill: 10 },
+  { name: "iPhone 15 Pro Max", chip: "A17 Pro · GPU 6 ядер", gb: 2900, fill: 21 },
+];
+const CAL = { ms: 9.1, gb: 4200 }; // калибровка теста: Apple M5 Max в Chrome
+function cpuBench() {
+  const m = new Float64Array(6 * 64); let best = Infinity, sink = 0;
+  for (let rep = 0; rep < 21; rep++) {
+    const t0 = performance.now();
+    for (let i = 0; i < 300000; i++) {
+      const k = (i & 63) * 6, pk = ((i - 1) & 63) * 6, r = i * 0.0007, c = Math.cos(r), s = Math.sin(r);
+      const pa = m[pk] || 1, pb = m[pk + 1], pc = m[pk + 2], pd = m[pk + 3] || 1;
+      m[k] = pa * c - pb * s; m[k + 1] = pa * s + pb * c; m[k + 2] = pc * c - pd * s; m[k + 3] = pc * s + pd * c;
+      m[k + 4] = m[pk + 4] + pa * 1.5 + pb * 0.5; m[k + 5] = m[pk + 5] + pc * 1.5 + pd * 0.5;
+      const n = Math.hypot(m[k], m[k + 1]) || 1; m[k] /= n; m[k + 1] /= n;
+    }
+    best = Math.min(best, performance.now() - t0); sink += m[5];
+  }
+  st.benchSink0 = sink;
+  return best;
+}
+function predictBase() {
+  const r = st.cur && st.cur.res; if (!r || !r.anims) return null;
+  const scr = Math.max(0.1, (+$("scr").value || 100) / 100);
+  const run = st.run && st.run.hash === st.cur.hash && st.run.runtime === st.mode ? st.run : null;
+  if (run) {
+    const worst = run.anims.reduce((m, a) => (a.cpuAvg + a.renderAvg > m.cpuAvg + m.renderAvg ? a : m), run.anims[0]);
+    const area = Math.max(...r.anims.map((a) => a.samples.reduce((m, s) => Math.max(m, s.area), 0)));
+    return { src: `замер всех анимаций, худшая ${worst.name}`, cpu: worst.cpuAvg + worst.renderAvg, px: area * scr * scr * run.instances, n: run.instances };
+  }
+  const tail = st.ring.slice(-120); if (tail.length < 20) return null;
+  const cpu = avg(tail.map((f) => f.spine + f.verts + f.render));
+  const a = r.anims.find((x) => x.name === tail[tail.length - 1].anim);
+  const area = a ? a.samples.reduce((m, s) => Math.max(m, s.area), 0) : 0, n = tail[tail.length - 1].n || 1;
+  return { src: `живой кадр, ${a ? a.name : "?"}`, cpu, px: area * scr * scr * n, n };
+}
+const chip = (share) => { const p = Math.round(share * 100) + "% · "; return share <= 0.15 ? `<span class="chip ok">${p}запас</span>` : share <= 0.4 ? `<span class="chip warn">${p}впритык</span>` : `<span class="chip over">${p}дорого</span>` };
+function renderPredict() {
+  const b = predictBase(), tb = $("pred");
+  if (!b || !st.score) { tb.innerHTML = '<tr><td colspan="5" class="hint">Появится через секунду после запуска анимации.</td></tr>'; $("pred-src").textContent = ""; return }
+  $("pred-src").textContent = `${st.mode === "web" ? "WebGL" : "Pixi"} · ${b.src} · ${b.n} ${plural(b.n, "копия", "копии", "копий")}`;
+  const rows = [];
+  rows.push(`<tr><td>Это устройство<br><span class="lab">~${Math.round(st.score)} GB6, замер</span></td><td class="num">${b.cpu.toFixed(2)}</td><td class="num">-</td><td>${chip(b.cpu / BUDGET_MS)}</td></tr>`);
+  for (const r of st.others || []) {
+    if (st.cur && r.hash !== st.cur.hash) continue;
+    const w = r.anims.reduce((m, a) => (a.cpuAvg + a.renderAvg > m.cpuAvg + m.renderAvg ? a : m), r.anims[0]);
+    const cpu = w.cpuAvg + w.renderAvg;
+    rows.push(`<tr><td>${esc(r.device).slice(0, 40)}<br><span class="lab">${esc(r.runtime || "pixi")}, ${r.instances} ${plural(r.instances, "копия", "копии", "копий")}</span></td><td class="num">${cpu.toFixed(2)}</td><td class="num">-</td><td>${chip(cpu / BUDGET_MS)}<br><span class="chip meas">измерено</span></td></tr>`);
+  }
+  for (const d of DEVICES) {
+    const cpu = b.cpu * st.score / d.gb, gpu = b.px / (d.fill * 1e9 * 0.5) * 1000, share = Math.max(cpu, gpu) / BUDGET_MS;
+    rows.push(`<tr><td style="white-space:normal">${esc(d.name)}<br><span class="lab">${esc(d.chip)} · ${d.gb} GB6</span></td><td class="num">${cpu.toFixed(2)}</td><td class="num">${gpu.toFixed(2)}</td><td>${chip(share)}</td></tr>`);
+  }
+  tb.innerHTML = rows.join("");
+}
+
+// ---------- библиотека в IndexedDB ----------
+function idb() {
+  return new Promise((res, rej) => {
+    try { const q = indexedDB.open("spine-acceptance", 1); q.onupgradeneeded = () => q.result.createObjectStore("bundles", { keyPath: "id" }); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error) } catch (e) { rej(e) }
+  });
+}
+async function idbDo(mode, fn) {
+  const db = await idb();
+  return new Promise((res, rej) => { const tx = db.transaction("bundles", mode), r = fn(tx.objectStore("bundles")); tx.oncomplete = () => res(r && r.result); tx.onerror = () => rej(tx.error) });
+}
+async function libSave(name, files, hash) {
+  try { await idbDo("readwrite", (s) => s.put({ id: hash, name, date: Date.now(), files })); await libList() } catch {}
+}
+async function libList() {
+  try {
+    const all = (await idbDo("readonly", (s) => s.getAll())) || [];
+    all.sort((a, b) => b.date - a.date);
+    $("lib").innerHTML = all.map((b) => `<span class="item"><button class="sm" data-open="${b.id}">${esc(b.name)} · ${new Date(b.date).toLocaleDateString()}</button><button class="sm" data-del="${b.id}" aria-label="Удалить ${esc(b.name)}">×</button></span>`).join("");
+  } catch { $("lib").innerHTML = '<span class="hint">Хранилище браузера недоступно, библиотека выключена.</span>' }
+}
+
+// ---------- загрузка ----------
+async function selectSet(set) {
+  st.cur = set; st.fitted = false; st.sel = -1; st.ring = []; st.hiSlot = null;
+  const first = set.res.anims && (set.res.anims.find((a) => a.duration > 0) || set.res.anims[0]);
+  if (!st.tracks[0].anim || !set.res.data || !set.res.data.findAnimation(st.tracks[0].anim)) st.tracks = [{ anim: first ? first.name : null, loop: true, alpha: 1 }];
+  renderSets(); renderReport();
+  await ensureApp(); await buildScene();
+  if (!st.playing) togglePlay();
+  if (st.mode === "web") startWeb();
+}
+async function load(files, fromLib) {
+  const { sets, problems } = buildSets(files);
+  if (!sets.length) {
+    $("verdict").className = "verdict fail";
+    $("verdict").innerHTML = `<b>Скелет не найден</b><span>Нужен .skel или .json с атласом рядом. ${esc(problems.join("; "))}</span>`;
+    return;
+  }
+  for (const s of sets) {
+    s.hash = await sha(s.skel.bytes);
+    try { s.res = analyse(s) } catch (e) { s.res = { version: readHeaderVersion(s), data: null, error: e.message } }
+  }
+  for (const s of sets) {
+    s.checks = checksFor(s, sets);
+    if (s.res.error) s.checks.unshift({ level: "fail", title: "Рантайм не прочитал скелет", detail: s.res.error, remark: `Скелет не читается рантаймом ${RUNTIME}: ${s.res.error}` });
+  }
+  const area = (s) => s.res.atlas ? s.res.atlas.pages.reduce((m, p) => m + p.width * p.height, 0) : 0;
+  sets.sort((a, b) => area(b) - area(a));
+  for (const s of st.sets) if (s.sources) { for (const x of s.sources) x.destroy(); s.sources = null }
+  st.sets = sets; st.run = null; $("copy-run").disabled = true; $("evlog").innerHTML = "";
+  $("stage").classList.add("loaded");
+  if (!fromLib) libSave(sets[0].stem + (sets.length > 1 ? ` ×${sets.length}` : ""), files, sets[0].hash + ":" + sets.length);
+  try { st.others = JSON.parse(localStorage.getItem("runs:" + sets[0].hash) || "[]") } catch { st.others = [] }
+  renderCompare();
+  await selectSet(sets[0]);
+}
+
+// ---------- события интерфейса ----------
+const stage = $("stage");
+["dragenter", "dragover"].forEach((t) => document.addEventListener(t, (e) => { e.preventDefault(); stage.classList.add("dragging") }));
+document.addEventListener("dragleave", (e) => { if (!e.relatedTarget) stage.classList.remove("dragging") });
+document.addEventListener("drop", async (e) => {
+  e.preventDefault(); stage.classList.remove("dragging");
+  const items = [...(e.dataTransfer.items || [])].map((i) => i.webkitGetAsEntry && i.webkitGetAsEntry()).filter(Boolean);
+  let list = [];
+  if (items.length) { for (const it of items) await walkEntry(it, "", list) } else list = [...e.dataTransfer.files];
+  load(await filesFromList(list));
+});
+$("pick-files").addEventListener("change", async (e) => load(await filesFromList([...e.target.files])));
+$("pick-dir").addEventListener("change", async (e) => load(await filesFromList([...e.target.files])));
+$("sets").addEventListener("click", (e) => { const b = e.target.closest("button[data-i]"); if (b) selectSet(st.sets[+b.dataset.i]) });
+$("anims").addEventListener("click", (e) => {
+  const tr = e.target.closest("tr[data-a]"); if (!tr) return;
+  const cv = e.target.closest("canvas.heat");
+  if (tr.dataset.a !== st.tracks[0].anim) playAnim(tr.dataset.a);
+  if (cv) {
+    const a = st.cur.res.anims[+cv.dataset.i], b = cv.getBoundingClientRect();
+    if (st.playing) togglePlay();
+    seek((e.clientX - b.left) / b.width * a.duration);
+  }
+});
+$("anims").addEventListener("keydown", (e) => { const tr = e.target.closest("tr[data-a]"); if (tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); playAnim(tr.dataset.a) } });
+$("order").addEventListener("click", (e) => { const tr = e.target.closest("tr[data-s]"); if (!tr) return; st.hiSlot = st.hiSlot === tr.dataset.s ? null : tr.dataset.s; renderOrder() });
+$("tabs").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-tab]"); if (!b) return;
+  document.querySelectorAll("#tabs button").forEach((x) => x.setAttribute("aria-selected", x === b));
+  document.querySelectorAll(".tabp").forEach((p) => p.hidden = p.id !== b.dataset.tab);
+  if (b.dataset.tab === "t-order") renderOrder();
+});
+$("tracks").addEventListener("input", (e) => {
+  const tr = e.target.closest("tr[data-t]"), k = e.target.dataset.k; if (!tr || !k) return;
+  const t = st.tracks[+tr.dataset.t];
+  if (k === "anim") t.anim = e.target.value || null; if (k === "loop") t.loop = e.target.checked; if (k === "alpha") t.alpha = +e.target.value;
+  applyTracks(false);
+});
+$("tracks").addEventListener("click", (e) => {
+  const tr = e.target.closest("tr[data-t]"); if (!tr || e.target.dataset.k !== "del") return;
+  const i = +tr.dataset.t; for (const sp of st.insts) sp.state.setEmptyAnimation(i, st.mix);
+  st.tracks.splice(i, 1); renderTracks(); applyTracks(false);
+});
+$("add-track").onclick = () => { st.tracks.push({ anim: null, loop: true, alpha: 1 }); renderTracks() };
+$("mix").addEventListener("input", (e) => { st.mix = Math.max(0, +e.target.value || 0); if (st.cur && st.cur.stateData) st.cur.stateData.defaultMix = st.mix });
+$("play").onclick = togglePlay;
+$("scrub").addEventListener("input", (e) => {
+  const en = mainEntry(); if (!en) return;
+  if (st.playing) togglePlay();
+  seek(+e.target.value / 1000 * en.animation.duration);
+});
+const fps = () => (st.cur && st.cur.live && st.cur.live.fps) || 30;
+$("step-fwd").onclick = () => { if (st.playing) togglePlay(); if (st.mode === "web") { const en = mainEntry(); if (en) seek(en.getAnimationTime() + 1 / fps()); return } for (const sp of st.insts) sp.update(1 / fps()); updateTimeUI(); st.needOrder = true };
+$("step-back").onclick = () => { if (st.playing) togglePlay(); const en = mainEntry(); if (en) seek(Math.max(0, en.getAnimationTime() - 1 / fps())) };
+$("to-setup").onclick = () => { if (st.playing) togglePlay(); if (st.web && st.web.animationState) { st.web.animationState.clearTracks(); st.web.skeleton.setToSetupPose(); webApply(); for (const c of st.webCopies) { c.state.clearTracks(); c.sk.setToSetupPose(); c.sk.updateWorldTransform(SPW.Physics.update) } } for (const sp of st.insts) { sp.state.clearTracks(); sp.skeleton.setToSetupPose(); sp.update(0) } updateTimeUI(); st.needOrder = true };
+$("speed").onchange = (e) => { st.speed = +e.target.value; if (st.web) st.web.speed = st.speed };
+$("skin").onchange = () => { for (const sp of st.insts) { sp.skeleton.setSkinByName($("skin").value); sp.skeleton.setSlotsToSetupPose(); sp.update(0) } if (st.web && st.web.skeleton) { st.web.skeleton.setSkinByName($("skin").value); st.web.skeleton.setSlotsToSetupPose(); for (const c of st.webCopies) { c.sk.setSkinByName($("skin").value); c.sk.setSlotsToSetupPose() } } };
+$("inst").addEventListener("change", (e) => {
+  const n = Math.max(1, Math.min(200, Math.round(+e.target.value || 1))); e.target.value = n;
+  if (!st.cur || !st.cur.live) return;
+  makeInstances(n); if (st.web) makeWebCopies(); applyTracks(true); fitView(); st.ring = [];
+});
+$("bg-seg").addEventListener("click", (e) => {
+  const b = e.target.closest("button[data-bg]"); if (!b) return;
+  st.bg = b.dataset.bg;
+  document.querySelectorAll("#bg-seg button").forEach((x) => x.setAttribute("aria-pressed", x === b));
+  if (st.app) st.app.renderer.background.color = "#" + st.bg;
+  if (st.web) { st.web.bg.setFromString(st.bg); st.web.dom.style.backgroundColor = "#" + st.bg }
+});
+$("debug").addEventListener("change", (e) => {
+  if (e.target.id === "d-flip") { st.flip = e.target.checked; if (st.cur) { buildScene(); if (st.mode === "web") startWeb() } return }
+  applyDebug();
+});
+$("prof").addEventListener("click", (e) => {
+  const b = $("prof").getBoundingClientRect(), i = Math.floor((e.clientX - b.left) / b.width * RING);
+  if (i >= st.ring.length) return;
+  st.sel = i; if (st.playing) togglePlay();
+  const f = st.ring[i];
+  if (f.anim && f.anim !== st.tracks[0].anim) { st.tracks[0].anim = f.anim; applyTracks(false) }
+  seek(f.t); drawProf();
+});
+$("worst").onclick = () => {
+  if (!st.ring.length) return;
+  let wi = 0; st.ring.forEach((f, i) => { if (f.spine + f.verts + f.render > st.ring[wi].spine + st.ring[wi].verts + st.ring[wi].render) wi = i });
+  st.sel = wi; if (st.playing) togglePlay();
+  const f = st.ring[wi];
+  if (f.anim && f.anim !== st.tracks[0].anim) { st.tracks[0].anim = f.anim; applyTracks(false) }
+  seek(f.t); drawProf();
+};
+$("rec-clear").onclick = () => { st.ring = []; st.sel = -1; drawProf() };
+$("ev-clear").onclick = () => { $("evlog").innerHTML = "" };
+$("bench").onclick = bench;
+$("rt-seg").addEventListener("click", (e) => { const b = e.target.closest("button[data-rt]"); if (b && b.dataset.rt !== st.mode) setMode(b.dataset.rt) });
+$("copy-run").onclick = async () => {
+  const txt = JSON.stringify(st.run);
+  try { await navigator.clipboard.writeText(txt); $("copy-run-msg").textContent = "Скопировано" }
+  catch { $("paste-run").value = txt; $("paste-run").select(); $("copy-run-msg").textContent = "Выделено в поле ниже, нажмите Cmd+C" }
+};
+$("paste-run").addEventListener("input", (e) => {
+  let r; try { r = JSON.parse(e.target.value) } catch { return }
+  if (!r || r.kind !== "spine-acceptance-run" || !Array.isArray(r.anims)) { $("copy-run-msg").textContent = "Это не замер со страницы приёмки"; return }
+  if (st.cur && r.hash !== st.cur.hash) $("copy-run-msg").textContent = "Замер другого скелета: сравнение будет неточным";
+  else $("copy-run-msg").textContent = "Замер добавлен";
+  st.others = [...(st.others || []).filter((x) => x.date !== r.date), r];
+  try { localStorage.setItem("runs:" + r.hash, JSON.stringify(st.others)) } catch {}
+  e.target.value = ""; renderCompare(); renderPredict();
+});
+$("lib").addEventListener("click", async (e) => {
+  const o = e.target.closest("[data-open]"), d = e.target.closest("[data-del]");
+  try {
+    if (o) { const b = await idbDo("readonly", (s) => s.get(o.dataset.open)); if (b) load(b.files, true) }
+    if (d) { await idbDo("readwrite", (s) => s.delete(d.dataset.del)); libList() }
+  } catch {}
+});
+$("copy").onclick = async () => {
+  const t = $("remarks");
+  try { await navigator.clipboard.writeText(t.value); $("copied").textContent = "Скопировано" }
+  catch { t.select(); $("copied").textContent = "Выделено, нажмите Cmd+C" }
+};
+$("dev-name").textContent = deviceName();
+$("scr").addEventListener("input", renderPredict);
+window.__cpuBench = cpuBench;
+setTimeout(() => { st.score = CAL.gb * CAL.ms / cpuBench(); renderPredict() }, 400);
+libList();
+
+if (window.EMBEDDED_FILES) {
+  const bin = (s) => Uint8Array.from(atob(s), (ch) => ch.charCodeAt(0));
+  load(window.EMBEDDED_FILES.map((f) => ({ path: f.path, bytes: bin(f.b64) })), true);
+}
+</script>
+
+</body>
+</html>
